@@ -12,14 +12,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetBudgieOPSC">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".activity_category"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_category"
+            android:theme="@style/Theme.BudgetBudgieOPSC" />
+        <activity
+            android:name=".CategoryDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="Category Detail"
+            android:theme="@style/Theme.BudgetBudgieOPSC" />
+        <activity
+            android:name=".CategorySettingsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="Category Settings"
+            android:theme="@style/Theme.BudgetBudgieOPSC" />
+        <activity
+            android:name=".activity_account"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_account"
+            android:theme="@style/Theme.BudgetBudgieOPSC" />
+        <activity
+            android:name=".login"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.BudgetBudgieOPSC.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:label="Create Account"
+            android:theme="@style/Theme.BudgetBudgieOPSC.Fullscreen" />
     </application>
 
 </manifest>
