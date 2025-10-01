@@ -1,5 +1,7 @@
 package com.example.budget_budgie_opsc
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -34,14 +36,24 @@ class CategorySettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnSaveCategory).setOnClickListener {
             val newName = findViewById<TextInputEditText>(R.id.etCategoryName).text?.toString() ?: name
             val newAmount = findViewById<TextInputEditText>(R.id.etCategoryAmount).text?.toString()?.toDoubleOrNull() ?: amount
+
             CoroutineScope(Dispatchers.IO).launch {
                 if (categoryId != -1) {
                     db.categoryDao().updateNameAndBudget(categoryId, newName, newAmount)
                 }
-                finish()
+
+                // Return the updated category info back to activity_category
+                val resultIntent = Intent().apply {
+                    putExtra("UPDATED_CATEGORY_ID", categoryId)
+                    putExtra("UPDATED_CATEGORY_NAME", newName)
+                    putExtra("UPDATED_CATEGORY_AMOUNT", newAmount)
+                }
+
+                runOnUiThread {
+                    setResult(Activity.RESULT_OK, resultIntent)
+                    finish()
+                }
             }
         }
     }
 }
-
-

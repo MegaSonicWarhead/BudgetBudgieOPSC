@@ -1,5 +1,6 @@
 package com.example.budget_budgie_opsc
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
@@ -10,13 +11,20 @@ import java.util.Locale
 
 class CategoryDetailActivity : AppCompatActivity() {
 
+    private var categoryId: Int = -1
+    private var categoryName: String = ""
+    private var total: Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category_detail)
 
-        val categoryName = intent.getStringExtra("CATEGORY_NAME") ?: "Category"
-        val total = intent.getDoubleExtra("CATEGORY_TOTAL", 0.0)
+        // Get category data from intent
+        categoryId = intent.getIntExtra("CATEGORY_ID", -1)
+        categoryName = intent.getStringExtra("CATEGORY_NAME") ?: "Category"
+        total = intent.getDoubleExtra("CATEGORY_TOTAL", 0.0)
 
+        // Set UI
         findViewById<TextView>(R.id.tvCategoryNameDetail).text = categoryName
         val fmt = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
         findViewById<TextView>(R.id.tvTotalAmount).text = fmt.format(total)
@@ -26,16 +34,18 @@ class CategoryDetailActivity : AppCompatActivity() {
         slider.valueTo = total.toFloat()
         slider.value = total.toFloat()
 
+        // Back button
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
 
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCategorySettings).setOnClickListener {
-            val intent = android.content.Intent(this, CategorySettingsActivity::class.java)
-            intent.putExtra("CATEGORY_ID", intent.getIntExtra("CATEGORY_ID", -1))
-            intent.putExtra("CATEGORY_NAME", categoryName)
-            intent.putExtra("CATEGORY_TOTAL", total)
-            startActivity(intent)
-        }
+        // Category Settings button
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCategorySettings)
+            .setOnClickListener {
+                val intent = Intent(this, CategorySettingsActivity::class.java).apply {
+                    putExtra("CATEGORY_ID", categoryId)
+                    putExtra("CATEGORY_NAME", categoryName)
+                    putExtra("CATEGORY_TOTAL", total)
+                }
+                startActivity(intent)
+            }
     }
 }
-
-
