@@ -22,6 +22,7 @@ class activity_category : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private var userId: Int = -1
     private lateinit var adapter: CategoryAdapter
+    private var totalMonthlyBudget: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,24 +63,52 @@ class activity_category : AppCompatActivity() {
             })
         }
 
+        // Confirm minimum & maximum monthly budget
         findViewById<Button>(R.id.btnConfirmBudget).setOnClickListener {
-            val amountStr = findViewById<TextInputEditText>(R.id.etMonthlyBudget).text?.toString()
-            val amount = amountStr?.toDoubleOrNull() ?: 0.0
-            if (amount <= 0.0) {
-                Toast.makeText(this, "Please enter a budget greater than 0.", Toast.LENGTH_SHORT).show()
+            val minStr = findViewById<TextInputEditText>(R.id.etMinBudget).text?.toString()
+            val maxStr = findViewById<TextInputEditText>(R.id.etMaxBudget).text?.toString()
+
+            val minAmount = minStr?.toDoubleOrNull() ?: 0.0
+            val maxAmount = maxStr?.toDoubleOrNull() ?: 0.0
+
+            if (minAmount <= 0 || maxAmount <= 0) {
+                Toast.makeText(this, "Please enter budgets greater than 0.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            if (minAmount > maxAmount) {
+                Toast.makeText(this, "Minimum budget cannot be greater than maximum budget.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            totalMonthlyBudget = maxAmount
+
             lifecycleScope.launch {
-                db.categoryDao().insert(Category(userId = userId, name = "General", budget = amount))
+                // Only assign the minimum amount to "General" initially
+                db.categoryDao().insert(Category(userId = userId, name = "General", budget = minAmount))
                 loadCategories()
             }
         }
 
+        // Add new category
         findViewById<FloatingActionButton>(R.id.fabAddCategory).setOnClickListener {
-            val defaultBudget = 1.0
+            val defaultBudget = 1.0 // or prompt user
+
             lifecycleScope.launch {
-                val newCategory = Category(userId = userId, name = "New Category", budget = defaultBudget)
-                db.categoryDao().insert(newCategory)
+                val categories = db.categoryDao().getCategoriesForUser(userId)
+                val generalBudget = categories.firstOrNull { it.name == "General" }?.budget ?: 0.0
+                val used = categories.filter { it.name != "General" }.sumOf { it.budget }
+                val remainingBudget = generalBudget - used
+
+                if (remainingBudget <= 0) {
+                    runOnUiThread {
+                        Toast.makeText(this@activity_category, "No budget remaining for new categories.", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                val categoryBudget = if (defaultBudget <= remainingBudget) defaultBudget else remainingBudget
+                db.categoryDao().insert(Category(userId = userId, name = "New Category", budget = categoryBudget))
                 loadCategories()
             }
         }
@@ -89,13 +118,19 @@ class activity_category : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh categories whenever returning from settings or detail
         loadCategories()
     }
 
     private fun loadCategories() {
         lifecycleScope.launch {
             val categories = db.categoryDao().getCategoriesForUser(userId)
+
+            // Ensure totalMonthlyBudget is initialized
+            if (totalMonthlyBudget == 0.0) {
+                val general = categories.firstOrNull { it.name == "General" }
+                totalMonthlyBudget = general?.budget ?: totalMonthlyBudget
+            }
+
             runOnUiThread {
                 val isFirstTime = categories.isEmpty()
                 val form = findViewById<View>(R.id.budgetFormContainer)
@@ -119,8 +154,14 @@ class activity_category : AppCompatActivity() {
     }
 
     private fun updateTotalAvailable(categories: List<Category>) {
-        val total = categories.sumOf { it.budget }
+        // General category is treated as the max total budget, don't count it as used
+        val generalBudget = categories.firstOrNull { it.name == "General" }?.budget ?: 0.0
+        val otherCategoriesUsed = categories
+            .filter { it.name != "General" }
+            .sumOf { it.budget }
+
+        val remaining = (generalBudget - otherCategoriesUsed).coerceAtLeast(0.0)
         val fmt = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
-        findViewById<TextView>(R.id.tvTotalAvailable).text = fmt.format(total)
+        findViewById<TextView>(R.id.tvTotalAvailable).text = fmt.format(remaining)
     }
 }
