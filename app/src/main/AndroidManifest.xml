@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetBudgieOPSC">
         <activity
+            android:name=".addExpensesScreen"
+            android:exported="false" />
+        <activity
+            android:name=".viewExpenseScreen"
+            android:exported="false" />
+        <activity
+            android:name=".ExpensesScreen"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
