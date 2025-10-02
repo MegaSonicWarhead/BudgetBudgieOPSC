@@ -1,7 +1,5 @@
 package com.example.budget_budgie_opsc
 
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +23,12 @@ class CategoryAdapter(
             name.text = category.name
 
             slider.valueFrom = 0f
-            val budgetAsFloat = category.budget.toFloat()
+            val budgetAsFloat = category.allocatedAmount.toFloat()  // updated
             slider.valueTo = if (budgetAsFloat > 0f) budgetAsFloat else 1f
             slider.value = if (budgetAsFloat > 0f) budgetAsFloat else 0f
 
             val fmt = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
-            amountAvailable.text = fmt.format(category.budget)
+            amountAvailable.text = fmt.format(category.allocatedAmount)  // updated
 
             itemView.setOnClickListener {
                 onItemClicked(category)

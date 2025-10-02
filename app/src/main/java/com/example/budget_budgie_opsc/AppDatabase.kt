@@ -5,7 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [User::class, Account::class, Category::class], version = 1)
+// Incremented version to 2 to match schema changes
+@Database(entities = [User::class, Account::class, Category::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun accountDao(): AccountDao
@@ -22,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "budget_app_db"
                 )
-                    .fallbackToDestructiveMigration() // helpful during development
+                    .fallbackToDestructiveMigration() // clears old DB if version changes
                     .build()
                 INSTANCE = instance
                 instance

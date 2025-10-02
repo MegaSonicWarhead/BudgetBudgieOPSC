@@ -1,20 +1,18 @@
 package com.example.budget_budgie_opsc
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 class activity_account : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
@@ -30,7 +28,11 @@ class activity_account : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.accountRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = AccountAdapter(emptyList())
+
+        adapter = AccountAdapter(emptyList(), { account ->
+            setSelectedAccount(account.id)
+            loadAccounts()
+        })
         recyclerView.adapter = adapter
 
         val addButton = findViewById<Button>(R.id.addAccountButton)
@@ -50,14 +52,15 @@ class activity_account : AppCompatActivity() {
         bigFab.setOnClickListener { showAddForm() }
         smallFab.setOnClickListener { showAddForm() }
 
-        // Navigate to Category screen via burger/menu button
+        // Navigate to Category screen
         findViewById<ImageButton>(R.id.btnMenu).setOnClickListener {
             val intent = android.content.Intent(this, activity_category::class.java)
             intent.putExtra("USER_ID", userId)
+            intent.putExtra("ACCOUNT_ID", getSelectedAccount())
             startActivity(intent)
         }
 
-        // Hook form buttons
+        // Add Checking account
         findViewById<Button>(R.id.btnAddChecking).setOnClickListener {
             val name = findViewById<EditText>(R.id.etNameChecking).text.toString()
             val balance = findViewById<EditText>(R.id.etBalanceChecking).text.toString().toDoubleOrNull() ?: 0.0
@@ -67,6 +70,8 @@ class activity_account : AppCompatActivity() {
                 addForm.visibility = View.GONE
             }
         }
+
+        // Add Credit Card account
         findViewById<Button>(R.id.btnAddCredit).setOnClickListener {
             val name = findViewById<EditText>(R.id.etNameCredit).text.toString()
             val balance = findViewById<EditText>(R.id.etBalanceCredit).text.toString().toDoubleOrNull() ?: 0.0
@@ -76,6 +81,8 @@ class activity_account : AppCompatActivity() {
                 addForm.visibility = View.GONE
             }
         }
+
+        // Add Debt account
         findViewById<Button>(R.id.btnAddDebt).setOnClickListener {
             val name = findViewById<EditText>(R.id.etNameDebt).text.toString()
             val balance = findViewById<EditText>(R.id.etBalanceDebt).text.toString().toDoubleOrNull() ?: 0.0
@@ -86,6 +93,7 @@ class activity_account : AppCompatActivity() {
             }
         }
 
+        // Cancel add form
         findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabBack).setOnClickListener {
             addForm.visibility = View.GONE
             loadAccounts()
@@ -116,16 +124,42 @@ class activity_account : AppCompatActivity() {
                     smallFab.visibility = View.VISIBLE
                 }
 
-                adapter.updateData(accounts)
+                // If no account selected → default to first
+                if (getSelectedAccount() == -1 && accounts.isNotEmpty()) {
+                    setSelectedAccount(accounts.first().id)
+                }
+
+                // 🔑 FIX: pass selected account id into adapter
+                adapter.updateData(accounts, getSelectedAccount())
+
                 updateNetTotal(accounts)
+                updateSelectedAccountLabel(accounts)
             }
         }
     }
 
     private fun updateNetTotal(accounts: List<Account>) {
         val total = accounts.sumOf { it.balance }
-        val tv = findViewById<android.widget.TextView>(R.id.tvNetTotal)
+        val tv = findViewById<TextView>(R.id.tvNetTotal)
         val fmt = java.text.NumberFormat.getCurrencyInstance(java.util.Locale("en", "ZA"))
         tv.text = fmt.format(total)
+    }
+
+    private fun updateSelectedAccountLabel(accounts: List<Account>) {
+        val selectedId = getSelectedAccount()
+        val selected = accounts.find { it.id == selectedId }
+        val tv = findViewById<TextView>(R.id.tvSelectedAccount)
+        tv.text = selected?.name ?: "No Account Selected"
+    }
+
+    // SharedPreferences for selected account
+    private fun setSelectedAccount(accountId: Int) {
+        val prefs = getSharedPreferences("BudgetBudgiePrefs", Context.MODE_PRIVATE)
+        prefs.edit().putInt("SELECTED_ACCOUNT_ID", accountId).apply()
+    }
+
+    private fun getSelectedAccount(): Int {
+        val prefs = getSharedPreferences("BudgetBudgiePrefs", Context.MODE_PRIVATE)
+        return prefs.getInt("SELECTED_ACCOUNT_ID", -1)
     }
 }

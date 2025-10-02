@@ -20,7 +20,7 @@ import java.util.Locale
 class activity_category : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
-    private var userId: Int = -1
+    private var accountId: Int = -1
     private lateinit var adapter: CategoryAdapter
     private var totalMonthlyBudget: Double = 0.0
 
@@ -29,9 +29,9 @@ class activity_category : AppCompatActivity() {
         setContentView(R.layout.activity_category)
 
         db = AppDatabase.getDatabase(this)
-        userId = intent.getIntExtra("USER_ID", -1)
-        if (userId == -1) {
-            Toast.makeText(this, "Error: User not identified.", Toast.LENGTH_LONG).show()
+        accountId = intent.getIntExtra("ACCOUNT_ID", -1)
+        if (accountId == -1) {
+            Toast.makeText(this, "Error: Account not identified.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
@@ -44,13 +44,13 @@ class activity_category : AppCompatActivity() {
                 Intent(this, CategorySettingsActivity::class.java).apply {
                     putExtra("CATEGORY_ID", category.id)
                     putExtra("CATEGORY_NAME", category.name)
-                    putExtra("CATEGORY_TOTAL", category.budget)
+                    putExtra("CATEGORY_TOTAL", category.allocatedAmount)
                 }
             } else {
                 Intent(this, CategoryDetailActivity::class.java).apply {
                     putExtra("CATEGORY_ID", category.id)
                     putExtra("CATEGORY_NAME", category.name)
-                    putExtra("CATEGORY_TOTAL", category.budget)
+                    putExtra("CATEGORY_TOTAL", category.allocatedAmount)
                 }
             }
             startActivity(intent)
@@ -59,7 +59,7 @@ class activity_category : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.btnMenuCategory).setOnClickListener {
             startActivity(Intent(this, activity_account::class.java).apply {
-                putExtra("USER_ID", userId)
+                putExtra("ACCOUNT_ID", accountId)
             })
         }
 
@@ -84,31 +84,38 @@ class activity_category : AppCompatActivity() {
             totalMonthlyBudget = maxAmount
 
             lifecycleScope.launch {
-                // Only assign the minimum amount to "General" initially
-                db.categoryDao().insert(Category(userId = userId, name = "General", budget = minAmount))
+                db.categoryDao().insert(
+                    Category(accountId = accountId, name = "General", allocatedAmount = minAmount)
+                )
                 loadCategories()
             }
         }
 
         // Add new category
         findViewById<FloatingActionButton>(R.id.fabAddCategory).setOnClickListener {
-            val defaultBudget = 1.0 // or prompt user
+            val defaultBudget = 1.0
 
             lifecycleScope.launch {
-                val categories = db.categoryDao().getCategoriesForUser(userId)
-                val generalBudget = categories.firstOrNull { it.name == "General" }?.budget ?: 0.0
-                val used = categories.filter { it.name != "General" }.sumOf { it.budget }
+                val categories = db.categoryDao().getCategoriesForAccount(accountId)
+                val generalBudget = categories.firstOrNull { it.name == "General" }?.allocatedAmount ?: 0.0
+                val used = categories.filter { it.name != "General" }.sumOf { it.allocatedAmount.toDouble() }
                 val remainingBudget = generalBudget - used
 
                 if (remainingBudget <= 0) {
                     runOnUiThread {
-                        Toast.makeText(this@activity_category, "No budget remaining for new categories.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@activity_category,
+                            "No budget remaining for new categories.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     return@launch
                 }
 
                 val categoryBudget = if (defaultBudget <= remainingBudget) defaultBudget else remainingBudget
-                db.categoryDao().insert(Category(userId = userId, name = "New Category", budget = categoryBudget))
+                db.categoryDao().insert(
+                    Category(accountId = accountId, name = "New Category", allocatedAmount = categoryBudget)
+                )
                 loadCategories()
             }
         }
@@ -123,12 +130,11 @@ class activity_category : AppCompatActivity() {
 
     private fun loadCategories() {
         lifecycleScope.launch {
-            val categories = db.categoryDao().getCategoriesForUser(userId)
+            val categories = db.categoryDao().getCategoriesForAccount(accountId)
 
-            // Ensure totalMonthlyBudget is initialized
             if (totalMonthlyBudget == 0.0) {
                 val general = categories.firstOrNull { it.name == "General" }
-                totalMonthlyBudget = general?.budget ?: totalMonthlyBudget
+                totalMonthlyBudget = general?.allocatedAmount ?: totalMonthlyBudget
             }
 
             runOnUiThread {
@@ -154,11 +160,10 @@ class activity_category : AppCompatActivity() {
     }
 
     private fun updateTotalAvailable(categories: List<Category>) {
-        // General category is treated as the max total budget, don't count it as used
-        val generalBudget = categories.firstOrNull { it.name == "General" }?.budget ?: 0.0
+        val generalBudget = categories.firstOrNull { it.name == "General" }?.allocatedAmount ?: 0.0
         val otherCategoriesUsed = categories
             .filter { it.name != "General" }
-            .sumOf { it.budget }
+            .sumOf { it.allocatedAmount.toDouble() }
 
         val remaining = (generalBudget - otherCategoriesUsed).coerceAtLeast(0.0)
         val fmt = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
