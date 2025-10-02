@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="50dp"
-     >
+    android:paddingTop="50dp">
 
     <ImageButton
         android:id="@+id/btnMenuCategory"
@@ -42,29 +41,49 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSetMonthlyBudgetTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Set A Monthly Budget"
+                android:text="Set Monthly Budget Range"
                 app:cornerRadius="6dp"/>
 
+            <!-- Minimum Budget -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilMonthlyBudget"
+                android:id="@+id/tilMinBudget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:endIconMode="custom"
                 app:endIconDrawable="@android:drawable/ic_menu_edit"
-                app:helperText="Supporting text">
+                app:helperText="Minimum monthly budget">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMonthlyBudget"
+                    android:id="@+id/etMinBudget"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Input"
+                    android:hint="Minimum Budget"
+                    android:inputType="numberDecimal"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Maximum Budget -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMaxBudget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:endIconMode="custom"
+                app:endIconDrawable="@android:drawable/ic_menu_edit"
+                app:helperText="Maximum monthly budget">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etMaxBudget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Maximum Budget"
                     android:inputType="numberDecimal"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,7 +91,7 @@
                 android:id="@+id/btnConfirmBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set Budget"
+                android:text="Set Budget Range"
                 app:icon="@android:drawable/checkbox_on_background"
                 app:iconPadding="8dp"
                 app:iconGravity="textStart"
