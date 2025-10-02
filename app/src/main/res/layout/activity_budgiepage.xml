@@ -89,7 +89,7 @@
             android:id="@+id/main_action_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/upload" />
+            android:text="@string/options"/>
 
         <!-- Dropdown Button -->
         <com.google.android.material.button.MaterialButton
@@ -162,6 +162,7 @@
         android:paddingEnd="2dp"
         app:itemGravity="center"
         app:itemIconSize="24dp"
+        android:hapticFeedbackEnabled="true"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"

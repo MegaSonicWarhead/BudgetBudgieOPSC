@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/options_settings"
+        android:title="@string/settings" />
+    <item android:id="@+id/options_ivans_shop"
+        android:title="@string/ivan_s_shop" />
+    <item android:id="@+id/options_questpage"
+        android:title="@string/quests" />
+    <item android:id="@+id/options_rewards"
+        android:title="@string/rewards" />
+</menu>
