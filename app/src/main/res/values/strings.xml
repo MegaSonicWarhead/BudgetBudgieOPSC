@@ -3,4 +3,10 @@
     <string name="title_activity_login">login</string>
     <string name="title_activity_account">activity_account</string>
     <string name="title_activity_category">activity_category</string>
+    <string name="upload">Upload</string>
+    <string name="monthly_budget">MONTHLY BUDGET</string>
+    <string name="category">CATEGORY</string>
+    <string name="expenses">EXPENSES</string>
+    <string name="reports">REPORTS</string>
+    <string name="profile">PROFILE</string>
 </resources>
