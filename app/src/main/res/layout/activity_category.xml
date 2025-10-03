@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:paddingTop="50dp">
 
+    <!-- Burger Menu -->
     <ImageButton
         android:id="@+id/btnMenuCategory"
         android:layout_width="48dp"
@@ -14,6 +15,18 @@
         android:src="@android:drawable/ic_menu_sort_by_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- New Expenses Button -->
+    <ImageButton
+        android:id="@+id/btnGoExpenses"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Go to Expenses"
+        android:src="@android:drawable/ic_menu_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnMenuCategory"
+        android:layout_marginStart="8dp"/>
 
     <TextView
         android:id="@+id/tvCategoryTitle"

@@ -36,12 +36,11 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        android:hint="e.g., Kidnapping Ransom"
+        android:hint="e.g., Shopping Groceries"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtExpense">
 
-        <!-- THIS WAS MISSING -->
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/expense_edit_text"
             android:layout_width="match_parent"
@@ -72,7 +71,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtAmount">
 
-        <!-- THIS WAS ALSO MISSING -->
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/amount_edit_text"
             android:layout_width="match_parent"
@@ -81,33 +79,54 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Receipt image card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/image_button_container"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="50dp"
-        app:cardCornerRadius="75dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amount_input_layout">
 
-        <ImageButton
-            android:id="@+id/btn_add_image"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="center"
-            android:src="@android:drawable/ic_input_add"
-            app:tint="@color/material_dynamic_primary40"
-            tools:ignore="ContentDescription" />
+            android:layout_height="match_parent">
 
+            <!-- Image / Add button -->
+            <ImageButton
+                android:id="@+id/btn_add_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="@color/material_dynamic_primary40"
+                tools:ignore="ContentDescription" />
+
+            <!-- Remove (X) button -->
+            <ImageButton
+                android:id="@+id/btn_remove_image"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end|top"
+                android:background="@android:color/transparent"
+                android:padding="4dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:tint="@android:color/holo_red_dark"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+        </FrameLayout>
     </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/button2"
         android:layout_width="230dp"
         android:layout_height="75dp"
+        android:layout_marginTop="32dp"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
