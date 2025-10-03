@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Expense name -->
         <TextView
             android:id="@+id/txt_expense_name_heading"
             android:layout_width="wrap_content"
@@ -20,6 +21,17 @@
             android:text="Expense Name"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"/>
 
+        <!-- Date -->
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025-10-03"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_marginTop="4dp"
+            android:textColor="?attr/colorOnSurfaceVariant"/>
+
+        <!-- Amount and Category Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,6 +53,7 @@
                 android:text="Category"/>
         </LinearLayout>
 
+        <!-- Receipt Image -->
         <ImageView
             android:id="@+id/img_receipt"
             android:layout_width="match_parent"

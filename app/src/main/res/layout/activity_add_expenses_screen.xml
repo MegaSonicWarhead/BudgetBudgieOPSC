@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -79,23 +80,33 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Date picker button -->
+    <Button
+        android:id="@+id/btnExpenseDate"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/amount_input_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Receipt image card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/image_button_container"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amount_input_layout">
+        app:layout_constraintTop_toBottomOf="@+id/btnExpenseDate">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Image / Add button -->
             <ImageButton
                 android:id="@+id/btn_add_image"
                 android:layout_width="match_parent"
@@ -107,7 +118,6 @@
                 app:tint="@color/material_dynamic_primary40"
                 tools:ignore="ContentDescription" />
 
-            <!-- Remove (X) button -->
             <ImageButton
                 android:id="@+id/btn_remove_image"
                 android:layout_width="32dp"
@@ -116,9 +126,10 @@
                 android:background="@android:color/transparent"
                 android:padding="4dp"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:tint="@android:color/holo_red_dark"
+                app:tint="@android:color/holo_red_dark"
                 android:visibility="gone"
                 tools:ignore="ContentDescription" />
+
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 

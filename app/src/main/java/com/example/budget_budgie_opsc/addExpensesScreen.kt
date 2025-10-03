@@ -1,6 +1,7 @@
 package com.example.budget_budgie_opsc
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class addExpensesScreen : AppCompatActivity() {
 
@@ -23,13 +25,14 @@ class addExpensesScreen : AppCompatActivity() {
     private lateinit var submitButton: Button
     private lateinit var addImageButton: ImageButton
     private lateinit var removeImageButton: ImageButton
+    private lateinit var dateButton: Button
 
-    // These should come from login/session
-    private val currentUserId = 1        // replace with actual logged-in user ID
-    private val selectedAccountId = 1    // replace with selected account ID
+    private val currentUserId = 1
+    private val selectedAccountId = 1
 
     private var categoriesList = listOf<Category>()
     private var selectedImageUri: Uri? = null
+    private var selectedDateMillis: Long? = null
 
     companion object {
         private const val PICK_IMAGE_REQUEST = 1001
@@ -53,20 +56,14 @@ class addExpensesScreen : AppCompatActivity() {
         submitButton = findViewById(R.id.button2)
         addImageButton = findViewById(R.id.btn_add_image)
         removeImageButton = findViewById(R.id.btn_remove_image)
+        dateButton = findViewById(R.id.btnExpenseDate)
 
         loadCategories()
 
-        addImageButton.setOnClickListener {
-            pickImageFromGallery()
-        }
-
-        removeImageButton.setOnClickListener {
-            clearSelectedImage()
-        }
-
-        submitButton.setOnClickListener {
-            saveExpense()
-        }
+        addImageButton.setOnClickListener { pickImageFromGallery() }
+        removeImageButton.setOnClickListener { clearSelectedImage() }
+        dateButton.setOnClickListener { showDatePicker() }
+        submitButton.setOnClickListener { saveExpense() }
     }
 
     private fun loadCategories() {
@@ -98,15 +95,32 @@ class addExpensesScreen : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             selectedImageUri = data?.data
-            addImageButton.setImageURI(selectedImageUri) // Show preview
+            addImageButton.setImageURI(selectedImageUri)
             removeImageButton.visibility = android.view.View.VISIBLE
         }
     }
 
     private fun clearSelectedImage() {
         selectedImageUri = null
-        addImageButton.setImageResource(android.R.drawable.ic_input_add) // Reset to plus icon
+        addImageButton.setImageResource(android.R.drawable.ic_input_add)
         removeImageButton.visibility = android.view.View.GONE
+    }
+
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val dialog = DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val cal = Calendar.getInstance()
+                cal.set(year, month, dayOfMonth, 0, 0, 0)
+                selectedDateMillis = cal.timeInMillis
+                dateButton.text = "${dayOfMonth}/${month + 1}/$year"
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        dialog.show()
     }
 
     private fun saveExpense() {
@@ -120,8 +134,8 @@ class addExpensesScreen : AppCompatActivity() {
         val description = descriptionEditText.text.toString().trim()
         val amountText = amountEditText.text.toString().trim()
 
-        if (description.isBlank() || amountText.isBlank()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        if (description.isBlank() || amountText.isBlank() || selectedDateMillis == null) {
+            Toast.makeText(this, "Please fill in all fields and select a date", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -137,7 +151,7 @@ class addExpensesScreen : AppCompatActivity() {
             categoryId = selectedCategory.id,
             description = description,
             amount = amount,
-            date = System.currentTimeMillis(),
+            date = selectedDateMillis!!,
             receiptUri = selectedImageUri?.toString()
         )
 
@@ -145,7 +159,7 @@ class addExpensesScreen : AppCompatActivity() {
             db.expenseDao().insertExpense(expense)
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@addExpensesScreen, "Expense saved!", Toast.LENGTH_SHORT).show()
-                finish() // Close after saving
+                finish()
             }
         }
     }

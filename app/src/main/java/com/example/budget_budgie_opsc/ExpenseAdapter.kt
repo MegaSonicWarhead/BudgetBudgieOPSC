@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ExpenseAdapter(
@@ -19,6 +20,7 @@ class ExpenseAdapter(
         val txtName: TextView = itemView.findViewById(R.id.txt_expense_name_heading)
         val txtAmount: TextView = itemView.findViewById(R.id.txt_amount)
         val txtCategory: TextView = itemView.findViewById(R.id.txt_category)
+        val txtDate: TextView = itemView.findViewById(R.id.txt_date) // New TextView
         val imgReceipt: ImageView = itemView.findViewById(R.id.img_receipt)
     }
 
@@ -40,6 +42,10 @@ class ExpenseAdapter(
         // Show category name (fallback to ID if name missing)
         holder.txtCategory.text = categoryMap[expense.categoryId] ?: "Category ${expense.categoryId}"
 
+        // Format and show date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        holder.txtDate.text = dateFormat.format(Date(expense.date))
+
         // Load receipt image if available
         if (!expense.receiptUri.isNullOrEmpty()) {
             Glide.with(holder.itemView.context)
@@ -53,15 +59,13 @@ class ExpenseAdapter(
 
     override fun getItemCount(): Int = expenses.size
 
-    // Update the list dynamically
     fun updateData(newExpenses: List<Expense>) {
         expenses = newExpenses
         notifyDataSetChanged()
     }
 
-    // Update category map dynamically
     fun updateCategoryMap(newCategoryMap: Map<Int, String>) {
         categoryMap = newCategoryMap
-        notifyDataSetChanged() // refresh so category names update
+        notifyDataSetChanged()
     }
 }
