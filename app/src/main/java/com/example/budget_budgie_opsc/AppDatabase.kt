@@ -5,12 +5,23 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-// Incremented version to 2 to match schema changes
-@Database(entities = [User::class, Account::class, Category::class], version = 2)
+// Increment version to 3 (Category now includes userId + added Expense table)
+@Database(
+    entities = [
+        User::class,
+        Account::class,
+        Category::class,
+        Expense::class
+    ],
+    version = 4,
+    exportSchema = true // helps track migrations if you add them later
+)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun userDao(): UserDao
     abstract fun accountDao(): AccountDao
     abstract fun categoryDao(): CategoryDao
+    abstract fun expenseDao(): ExpenseDao
 
     companion object {
         @Volatile
@@ -23,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "budget_app_db"
                 )
-                    .fallbackToDestructiveMigration() // clears old DB if version changes
+                    .fallbackToDestructiveMigration() // clears data on schema changes
                     .build()
                 INSTANCE = instance
                 instance

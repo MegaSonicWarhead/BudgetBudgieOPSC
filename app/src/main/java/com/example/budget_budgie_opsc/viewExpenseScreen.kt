@@ -1,89 +1,206 @@
 package com.example.budget_budgie_opsc
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
+import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 class viewExpenseScreen : AppCompatActivity() {
 
-    private var categoryAll: String = "Categories"
-    private var categoryOne: String = "Groceries"
-    private var categoryTwo: String = "Gambling"
+    private lateinit var db: AppDatabase
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var dateSpinner: Spinner
+    private lateinit var categorySpinner: Spinner
+    private lateinit var sortSpinner: Spinner
+    private lateinit var startDateButton: Button
+    private lateinit var endDateButton: Button
+
+    private val currentUserId = 1
+    private val selectedAccountId = 1
+
+    private lateinit var adapter: ExpenseAdapter
+    private var categoriesList = listOf<Category>()
+    private var startDateMillis: Long? = null
+    private var endDateMillis: Long? = null
+
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_view_expense_screen)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val viewExpensesButton: Button = findViewById(R.id.btnViewExpenses)
-        val expenseItemCard: CardView = findViewById(R.id.expense_item_card)
+        db = AppDatabase.getDatabase(this)
 
-        val dateSpinner: Spinner = findViewById(R.id.spnrDate)
+        recyclerView = findViewById(R.id.recyclerExpenses)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = ExpenseAdapter(emptyList())
+        recyclerView.adapter = adapter
+
+        dateSpinner = findViewById(R.id.spnrDate)
+        categorySpinner = findViewById(R.id.spnrCategories)
+        sortSpinner = findViewById(R.id.spnrSort)
+        startDateButton = findViewById(R.id.btnStartDate)
+        endDateButton = findViewById(R.id.btnEndDate)
+
+        setupSpinners()
+        setupDatePickers()
+        loadCategories()
+        loadExpenses()
+    }
+
+    private fun setupSpinners() {
+        // Date filter spinner
         val dateOptions = listOf("List All", "Select Period")
         val dateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, dateOptions)
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         dateSpinner.adapter = dateAdapter
 
-        val categoriesSpinner: Spinner = findViewById(R.id.spnrCategories)
-        val categoriesOptions = listOf(categoryAll, categoryOne, categoryTwo)
-        val categoriesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoriesOptions)
-        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categoriesSpinner.adapter = categoriesAdapter
-
-        val sortSpinner: Spinner = findViewById(R.id.spnrSort)
-        val sortOptions = listOf("Sort", "Date: Oldest to Newest", "Date: Newest to Oldest", "Amount: Highest to Lowest", "Amount: Lowest to Highest")
+        // Sorting spinner
+        val sortOptions = listOf(
+            "Sort",
+            "Date: Oldest to Newest",
+            "Date: Newest to Oldest",
+            "Amount: Highest to Lowest",
+            "Amount: Lowest to Highest"
+        )
         val sortAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, sortOptions)
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sortSpinner.adapter = sortAdapter
 
-        // --- Container Reference ---
-        val customDateContainer: CardView = findViewById(R.id.custom_date_container)
-        val endDateContainer: CardView = findViewById(R.id.end_date_container)
-
-        // --- Spinner Item Selection Listener ---
-        dateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                // Get the selected item as a string
-                val selectedItem = parent.getItemAtPosition(position).toString()
-
-                // Check if the selected item is "Custom Date"
-                if (selectedItem == "Select Period") {
-                    // If it is, make the container visible
-                    customDateContainer.visibility = View.VISIBLE
-                    endDateContainer.visibility = View.VISIBLE
+        // Unified listener to reload expenses when any filter changes
+        val listener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if (dateSpinner.selectedItemPosition == 1) {
+                    startDateButton.visibility = View.VISIBLE
+                    endDateButton.visibility = View.VISIBLE
                 } else {
-                    // For any other selection, make the container hidden
-                    customDateContainer.visibility = View.GONE
-                    endDateContainer.visibility = View.GONE
+                    startDateButton.visibility = View.GONE
+                    endDateButton.visibility = View.GONE
+                    startDateMillis = null
+                    endDateMillis = null
                 }
+                loadExpenses()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing if no item is selected
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        dateSpinner.onItemSelectedListener = listener
+        categorySpinner.onItemSelectedListener = listener
+        sortSpinner.onItemSelectedListener = listener
+    }
+
+    private fun setupDatePickers() {
+        startDateButton.setOnClickListener {
+            showDatePicker { date ->
+                startDateMillis = date.time
+                startDateButton.text = dateFormat.format(date)
+                loadExpenses()
             }
         }
 
-        viewExpensesButton.setOnClickListener {
-            expenseItemCard.visibility = View.VISIBLE
+        endDateButton.setOnClickListener {
+            showDatePicker { date ->
+                endDateMillis = date.time
+                endDateButton.text = dateFormat.format(date)
+                loadExpenses()
+            }
         }
     }
 
+    private fun showDatePicker(onDateSelected: (Date) -> Unit) {
+        val calendar = Calendar.getInstance()
+        DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val cal = Calendar.getInstance()
+                cal.set(year, month, dayOfMonth, 0, 0, 0)
+                onDateSelected(cal.time)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
+
+    private fun loadCategories() {
+        lifecycleScope.launch {
+            categoriesList = withContext(Dispatchers.IO) {
+                db.categoryDao().getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
+            }
+
+            val categoryNames = mutableListOf("All Categories")
+            categoryNames.addAll(categoriesList.map { it.name })
+
+            // Build a map of categoryId -> categoryName
+            val categoryMap = categoriesList.associate { it.id to it.name }
+
+            val adapterArray = ArrayAdapter(
+                this@viewExpenseScreen,
+                android.R.layout.simple_spinner_item,
+                categoryNames
+            )
+            adapterArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            categorySpinner.adapter = adapterArray
+
+            // Pass the categoryMap to the RecyclerView adapter
+            adapter = ExpenseAdapter(emptyList(), categoryMap)
+            recyclerView.adapter = adapter
+        }
+    }
+
+    private fun loadExpenses() {
+        lifecycleScope.launch {
+            var expenses = withContext(Dispatchers.IO) {
+                db.expenseDao().getExpensesForUserAccount(currentUserId, selectedAccountId)
+            }
+
+            // Filter by category
+            val categoryPos = categorySpinner.selectedItemPosition
+            if (categoryPos > 0) {
+                val selectedCategory = categoriesList.getOrNull(categoryPos - 1)
+                selectedCategory?.let { cat ->
+                    expenses = expenses.filter { it.categoryId == cat.id }
+                }
+            }
+
+            // Filter by date range
+            startDateMillis?.let { start ->
+                expenses = expenses.filter { expense -> expense.date >= start }
+            }
+            endDateMillis?.let { end ->
+                expenses = expenses.filter { expense -> expense.date <= end }
+            }
+
+            // Sort
+            expenses = when (sortSpinner.selectedItemPosition) {
+                1 -> expenses.sortedBy { it.date }
+                2 -> expenses.sortedByDescending { it.date }
+                3 -> expenses.sortedByDescending { it.amount }
+                4 -> expenses.sortedBy { it.amount }
+                else -> expenses
+            }
+
+            adapter.updateData(expenses)
+        }
+    }
 }

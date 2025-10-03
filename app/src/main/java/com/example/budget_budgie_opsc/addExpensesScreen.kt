@@ -1,18 +1,39 @@
 package com.example.budget_budgie_opsc
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class addExpensesScreen : AppCompatActivity() {
 
-    private var categoryAll: String = "Categories"
-    private var categoryOne: String = "Groceries"
-    private var categoryTwo: String = "Gambling"
+    private lateinit var db: AppDatabase
+    private lateinit var categoriesSpinner: Spinner
+    private lateinit var descriptionEditText: EditText
+    private lateinit var amountEditText: EditText
+    private lateinit var submitButton: Button
+    private lateinit var addImageButton: ImageButton
+    private lateinit var removeImageButton: ImageButton
+
+    // These should come from login/session
+    private val currentUserId = 1        // replace with actual logged-in user ID
+    private val selectedAccountId = 1    // replace with selected account ID
+
+    private var categoriesList = listOf<Category>()
+    private var selectedImageUri: Uri? = null
+
+    companion object {
+        private const val PICK_IMAGE_REQUEST = 1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,12 +45,108 @@ class addExpensesScreen : AppCompatActivity() {
             insets
         }
 
-        val categoriesSpinner: Spinner = findViewById(R.id.spnrCategory)
-        val categoriesOptions = listOf(categoryAll, categoryOne, categoryTwo)
-        val categoriesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoriesOptions)
-        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categoriesSpinner.adapter = categoriesAdapter
+        db = AppDatabase.getDatabase(this)
+
+        categoriesSpinner = findViewById(R.id.spnrCategory)
+        descriptionEditText = findViewById(R.id.expense_edit_text)
+        amountEditText = findViewById(R.id.amount_edit_text)
+        submitButton = findViewById(R.id.button2)
+        addImageButton = findViewById(R.id.btn_add_image)
+        removeImageButton = findViewById(R.id.btn_remove_image)
+
+        loadCategories()
+
+        addImageButton.setOnClickListener {
+            pickImageFromGallery()
+        }
+
+        removeImageButton.setOnClickListener {
+            clearSelectedImage()
+        }
+
+        submitButton.setOnClickListener {
+            saveExpense()
+        }
     }
 
+    private fun loadCategories() {
+        lifecycleScope.launch {
+            categoriesList = withContext(Dispatchers.IO) {
+                db.categoryDao().getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
+            }
 
+            val categoryNames = mutableListOf("Select Category")
+            categoryNames.addAll(categoriesList.map { it.name })
+
+            val adapter = ArrayAdapter(
+                this@addExpensesScreen,
+                android.R.layout.simple_spinner_item,
+                categoryNames
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            categoriesSpinner.adapter = adapter
+        }
+    }
+
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(Intent.createChooser(intent, "Select Receipt Image"), PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            selectedImageUri = data?.data
+            addImageButton.setImageURI(selectedImageUri) // Show preview
+            removeImageButton.visibility = android.view.View.VISIBLE
+        }
+    }
+
+    private fun clearSelectedImage() {
+        selectedImageUri = null
+        addImageButton.setImageResource(android.R.drawable.ic_input_add) // Reset to plus icon
+        removeImageButton.visibility = android.view.View.GONE
+    }
+
+    private fun saveExpense() {
+        val selectedPosition = categoriesSpinner.selectedItemPosition
+        if (selectedPosition <= 0) {
+            Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val selectedCategory = categoriesList.getOrNull(selectedPosition - 1) ?: return
+        val description = descriptionEditText.text.toString().trim()
+        val amountText = amountEditText.text.toString().trim()
+
+        if (description.isBlank() || amountText.isBlank()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val amount = amountText.toDoubleOrNull()
+        if (amount == null) {
+            Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val expense = Expense(
+            userId = currentUserId,
+            accountId = selectedAccountId,
+            categoryId = selectedCategory.id,
+            description = description,
+            amount = amount,
+            date = System.currentTimeMillis(),
+            receiptUri = selectedImageUri?.toString()
+        )
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            db.expenseDao().insertExpense(expense)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@addExpensesScreen, "Expense saved!", Toast.LENGTH_SHORT).show()
+                finish() // Close after saving
+            }
+        }
+    }
 }

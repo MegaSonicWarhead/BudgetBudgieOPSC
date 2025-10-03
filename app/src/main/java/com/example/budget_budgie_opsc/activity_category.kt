@@ -21,6 +21,7 @@ class activity_category : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
     private var accountId: Int = -1
+    private var currentUserId: Int = -1
     private lateinit var adapter: CategoryAdapter
     private var totalMonthlyBudget: Double = 0.0
 
@@ -30,8 +31,10 @@ class activity_category : AppCompatActivity() {
 
         db = AppDatabase.getDatabase(this)
         accountId = intent.getIntExtra("ACCOUNT_ID", -1)
-        if (accountId == -1) {
-            Toast.makeText(this, "Error: Account not identified.", Toast.LENGTH_LONG).show()
+        currentUserId = intent.getIntExtra("USER_ID", -1)
+
+        if (accountId == -1 || currentUserId == -1) {
+            Toast.makeText(this, "Error: Account or User not identified.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
@@ -45,12 +48,14 @@ class activity_category : AppCompatActivity() {
                     putExtra("CATEGORY_ID", category.id)
                     putExtra("CATEGORY_NAME", category.name)
                     putExtra("CATEGORY_TOTAL", category.allocatedAmount)
+                    putExtra("USER_ID", currentUserId)
                 }
             } else {
                 Intent(this, CategoryDetailActivity::class.java).apply {
                     putExtra("CATEGORY_ID", category.id)
                     putExtra("CATEGORY_NAME", category.name)
                     putExtra("CATEGORY_TOTAL", category.allocatedAmount)
+                    putExtra("USER_ID", currentUserId)
                 }
             }
             startActivity(intent)
@@ -60,6 +65,7 @@ class activity_category : AppCompatActivity() {
         findViewById<ImageButton>(R.id.btnMenuCategory).setOnClickListener {
             startActivity(Intent(this, activity_account::class.java).apply {
                 putExtra("ACCOUNT_ID", accountId)
+                putExtra("USER_ID", currentUserId)
             })
         }
 
@@ -85,10 +91,23 @@ class activity_category : AppCompatActivity() {
 
             lifecycleScope.launch {
                 db.categoryDao().insert(
-                    Category(accountId = accountId, name = "General", allocatedAmount = minAmount)
+                    Category(
+                        userId = currentUserId,
+                        accountId = accountId,
+                        name = "General",
+                        allocatedAmount = minAmount
+                    )
                 )
                 loadCategories()
             }
+        }
+
+        findViewById<ImageButton>(R.id.btnGoExpenses).setOnClickListener {
+            val intent = Intent(this, ExpensesScreen::class.java).apply {
+                putExtra("USER_ID", currentUserId)
+                putExtra("ACCOUNT_ID", accountId)
+            }
+            startActivity(intent)
         }
 
         // Add new category
@@ -96,7 +115,7 @@ class activity_category : AppCompatActivity() {
             val defaultBudget = 1.0
 
             lifecycleScope.launch {
-                val categories = db.categoryDao().getCategoriesForAccount(accountId)
+                val categories = db.categoryDao().getCategoriesForAccountAndUser(accountId, currentUserId)
                 val generalBudget = categories.firstOrNull { it.name == "General" }?.allocatedAmount ?: 0.0
                 val used = categories.filter { it.name != "General" }.sumOf { it.allocatedAmount.toDouble() }
                 val remainingBudget = generalBudget - used
@@ -114,7 +133,12 @@ class activity_category : AppCompatActivity() {
 
                 val categoryBudget = if (defaultBudget <= remainingBudget) defaultBudget else remainingBudget
                 db.categoryDao().insert(
-                    Category(accountId = accountId, name = "New Category", allocatedAmount = categoryBudget)
+                    Category(
+                        userId = currentUserId,
+                        accountId = accountId,
+                        name = "New Category",
+                        allocatedAmount = categoryBudget
+                    )
                 )
                 loadCategories()
             }
@@ -130,7 +154,7 @@ class activity_category : AppCompatActivity() {
 
     private fun loadCategories() {
         lifecycleScope.launch {
-            val categories = db.categoryDao().getCategoriesForAccount(accountId)
+            val categories = db.categoryDao().getCategoriesForAccountAndUser(accountId, currentUserId)
 
             if (totalMonthlyBudget == 0.0) {
                 val general = categories.firstOrNull { it.name == "General" }
