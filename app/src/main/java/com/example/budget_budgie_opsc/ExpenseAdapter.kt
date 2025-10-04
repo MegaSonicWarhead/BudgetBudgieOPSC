@@ -1,5 +1,6 @@
 package com.example.budget_budgie_opsc
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +14,14 @@ import java.util.*
 
 class ExpenseAdapter(
     private var expenses: List<Expense>,
-    private var categoryMap: Map<Int, String> = emptyMap() // default empty map
+    private var categoryMap: Map<Int, String> = emptyMap()
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     inner class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtName: TextView = itemView.findViewById(R.id.txt_expense_name_heading)
         val txtAmount: TextView = itemView.findViewById(R.id.txt_amount)
         val txtCategory: TextView = itemView.findViewById(R.id.txt_category)
-        val txtDate: TextView = itemView.findViewById(R.id.txt_date) // New TextView
+        val txtDate: TextView = itemView.findViewById(R.id.txt_date)
         val imgReceipt: ImageView = itemView.findViewById(R.id.img_receipt)
     }
 
@@ -33,23 +34,25 @@ class ExpenseAdapter(
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val expense = expenses[position]
 
+        // Description
         holder.txtName.text = expense.description
 
-        // Format amount as South African Rand
+        // Format amount in South African Rand
         val formatter = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
         holder.txtAmount.text = formatter.format(expense.amount)
 
-        // Show category name (fallback to ID if name missing)
+        // Category
         holder.txtCategory.text = categoryMap[expense.categoryId] ?: "Category ${expense.categoryId}"
 
-        // Format and show date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        // Format date (e.g. 04 Oct 2025)
+        val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         holder.txtDate.text = dateFormat.format(Date(expense.date))
 
-        // Load receipt image if available
+        // Load receipt image safely
         if (!expense.receiptUri.isNullOrEmpty()) {
             Glide.with(holder.itemView.context)
-                .load(expense.receiptUri)
+                .load(Uri.parse(expense.receiptUri)) // ensure Uri is parsed
+                .centerCrop()
                 .into(holder.imgReceipt)
             holder.imgReceipt.visibility = View.VISIBLE
         } else {

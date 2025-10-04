@@ -86,17 +86,26 @@ class addExpensesScreen : AppCompatActivity() {
     }
 
     private fun pickImageFromGallery() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
-        startActivityForResult(Intent.createChooser(intent, "Select Receipt Image"), PICK_IMAGE_REQUEST)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             selectedImageUri = data?.data
-            addImageButton.setImageURI(selectedImageUri)
-            removeImageButton.visibility = android.view.View.VISIBLE
+            selectedImageUri?.let { uri ->
+                // Persist permission so you can still access the image later
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+
+                addImageButton.setImageURI(uri)
+                removeImageButton.visibility = android.view.View.VISIBLE
+            }
         }
     }
 
