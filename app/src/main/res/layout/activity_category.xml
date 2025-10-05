@@ -12,7 +12,6 @@
         android:layout_height="48dp"
         android:background="@android:color/transparent"
         android:contentDescription="menu"
-        android:src="@android:drawable/ic_menu_sort_by_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
