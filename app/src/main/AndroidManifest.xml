@@ -65,6 +65,10 @@
             android:theme="@style/Theme.BudgetBudgieOPSC" />
 
         <activity
+            android:name=".ProfileScreen"
+            android:exported="false" />
+
+        <activity
             android:name=".login"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"

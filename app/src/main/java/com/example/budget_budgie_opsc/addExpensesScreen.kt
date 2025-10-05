@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 import android.content.Intent
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class addExpensesScreen : AppCompatActivity() {
 
@@ -67,6 +68,42 @@ class addExpensesScreen : AppCompatActivity() {
         removeImageButton.setOnClickListener { clearSelectedImage() }
         dateButton.setOnClickListener { showDatePicker() }
         submitButton.setOnClickListener { saveExpense() }
+
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_nav)
+        bottomNavigationView.selectedItemId = R.id.nav_expenses
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            // The 'item' variable is the menu item that was clicked
+            when (item.itemId) {
+                // Check which item was clicked by its ID from the menu file
+                R.id.nav_categories -> {
+                    Toast.makeText(this, "Category Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_expenses -> {
+                    val intent = Intent(this, ExpensesScreen::class.java)
+                    startActivity(intent)
+                    //Prevent the screen transition animation
+                    overridePendingTransition(0, 0)
+                    true
+                }
+                R.id.nav_reports -> {
+                    Toast.makeText(this, "Reports Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_profile -> {
+                    val intent = Intent(this, ProfileScreen::class.java)
+                    startActivity(intent)
+                    //Prevent the screen transition animation
+                    overridePendingTransition(0, 0)
+                    true
+                }
+
+                // If the ID doesn't match any of our cases, do nothing
+                else -> false
+            }
+        }
+
     }
 
     // Load categories from DB
