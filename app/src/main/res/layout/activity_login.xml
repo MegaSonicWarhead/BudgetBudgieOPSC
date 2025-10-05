@@ -43,13 +43,16 @@
     <!-- Username Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilUsername"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="Username"
+        app:boxBackgroundColor="@android:color/black"
         app:boxStrokeColor="#B388FF"
+        app:hintTextColor="@android:color/white"
         app:hintEnabled="true"
+        app:hintAnimationEnabled="false"
         app:layout_constraintTop_toBottomOf="@id/cardAvatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -59,9 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName|textNoSuggestions"
-            android:ellipsize="end"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             android:textColorHint="#80FFFFFF" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -69,14 +70,17 @@
     <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:hint="Password"
+        app:boxBackgroundColor="@android:color/black"
         app:boxStrokeColor="#B388FF"
+        app:hintTextColor="@android:color/white"
         app:passwordToggleEnabled="true"
         app:hintEnabled="true"
+        app:hintAnimationEnabled="false"
         app:layout_constraintTop_toBottomOf="@id/tilUsername"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -86,9 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword|textNoSuggestions"
-            android:ellipsize="end"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             android:textColorHint="#80FFFFFF" />
     </com.google.android.material.textfield.TextInputLayout>

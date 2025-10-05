@@ -17,10 +17,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-
     }
 
     buildTypes {
@@ -54,9 +50,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.11.0")
 
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("io.coil-kt:coil:2.6.0")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     val room_version = "2.7.2"
     // Room components

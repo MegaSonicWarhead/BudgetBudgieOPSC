@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "categories")
 data class Category(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val userId: Int,
     val accountId: Int,   // 🔑 Link category to an account
     val name: String,
     val allocatedAmount: Double
+
 )
