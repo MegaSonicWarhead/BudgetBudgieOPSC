@@ -56,6 +56,9 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    //Lottie
+    implementation("com.airbnb.android:lottie:6.5.0")
+
     val room_version = "2.7.2"
     // Room components
     implementation("androidx.room:room-runtime:$room_version")

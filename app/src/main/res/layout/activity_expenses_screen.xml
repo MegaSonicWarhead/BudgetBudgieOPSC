@@ -10,12 +10,14 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="264dp"
+        android:layout_height="217dp"
+        android:layout_marginTop="88dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/budgetbudgie_noback"
         tools:srcCompat="@drawable/budgetbudgie_noback" />
 
     <Button

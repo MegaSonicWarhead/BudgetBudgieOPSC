@@ -6,17 +6,27 @@
     android:layout_height="match_parent"
     android:paddingTop="50dp">
 
+
     <ImageButton
         android:id="@+id/btnBack"
         style="@style/ThemeOverlay.BudgetBudgieOPSC.FullscreenContainer"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
         app:layout_constraintBottom_toBottomOf="@id/tvScreenTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/black"
         tools:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnBack"
+        app:layout_constraintTop_toTopOf="@+id/btnBack"
+        app:lottie_rawRes= "@raw/back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
     <TextView
         android:id="@+id/tvScreenTitle"
