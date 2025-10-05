@@ -96,6 +96,7 @@
             android:id="@+id/dropdown_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:hapticFeedbackEnabled="true"
             app:icon="@drawable/m3_split_button_chevron_avd"
             app:iconGravity="textStart"
             app:iconPadding="0dp" />
@@ -149,7 +150,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="72dp" />
+        android:layout_height="49dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
@@ -157,6 +158,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_weight="1"
+        android:layout_marginBottom="25dp"
         android:elevation="10dp"
         android:paddingStart="2dp"
         android:paddingEnd="2dp"
