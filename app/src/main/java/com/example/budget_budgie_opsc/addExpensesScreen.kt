@@ -1,20 +1,25 @@
 package com.example.budget_budgie_opsc
 
-import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import coil.load
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import android.content.Intent
 
 class addExpensesScreen : AppCompatActivity() {
 
@@ -34,9 +39,7 @@ class addExpensesScreen : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private var selectedDateMillis: Long? = null
 
-    companion object {
-        private const val PICK_IMAGE_REQUEST = 1001
-    }
+    private val TAG = "IMG_PICK"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +69,7 @@ class addExpensesScreen : AppCompatActivity() {
         submitButton.setOnClickListener { saveExpense() }
     }
 
+    // Load categories from DB
     private fun loadCategories() {
         lifecycleScope.launch {
             categoriesList = withContext(Dispatchers.IO) {
@@ -85,45 +89,135 @@ class addExpensesScreen : AppCompatActivity() {
         }
     }
 
-    private fun pickImageFromGallery() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
-    }
+    // New-style image picker launcher
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        if (uri == null) {
+            Log.w(TAG, "No URI returned from picker")
+            return@registerForActivityResult
+        }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            selectedImageUri = data?.data
-            selectedImageUri?.let { uri ->
-                // Persist permission so you can still access the image later
-                contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
+        Log.i(TAG, "Picked URI: $uri")
 
-                addImageButton.setImageURI(uri)
-                removeImageButton.visibility = android.view.View.VISIBLE
+        try {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not persist permission: ${e.message}")
+        }
+
+        selectedImageUri = uri
+
+        addImageButton.scaleType = ImageView.ScaleType.CENTER_CROP
+        addImageButton.imageTintList = null // remove tint so image displays properly
+
+        lifecycleScope.launch {
+            val bitmap = withContext(Dispatchers.IO) {
+                safeDecodeBitmapFromUri(uri, 1024, 1024)
+            }
+
+            if (bitmap != null) {
+                addImageButton.setImageBitmap(bitmap)
+                removeImageButton.visibility = View.VISIBLE
+                Log.i(TAG, "Image loaded successfully from URI.")
+            } else {
+                Log.w(TAG, "Manual decode failed — trying Coil fallback.")
+                try {
+                    addImageButton.load(uri) {
+                        crossfade(true)
+                        placeholder(android.R.drawable.ic_menu_gallery)
+                        error(android.R.drawable.ic_menu_report_image)
+                        // ✅ Coil listener without throwable.message
+                        listener(
+                            onError = { request, result ->
+                                Log.e(TAG, "Coil failed to load image: $result")
+                            },
+                            onSuccess = { request, metadata ->
+                                Log.i(TAG, "Coil loaded successfully")
+                                removeImageButton.visibility = View.VISIBLE
+                            }
+                        )
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Coil fallback failed: ${e.message}", e)
+                    Toast.makeText(
+                        this@addExpensesScreen,
+                        "Unable to load image",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
 
+    private fun pickImageFromGallery() {
+        pickImageLauncher.launch(arrayOf("image/*"))
+    }
+
+    // Decode image safely from content URI
+    private fun safeDecodeBitmapFromUri(uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap? {
+        return try {
+            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            contentResolver.openInputStream(uri)?.use { input ->
+                BitmapFactory.decodeStream(input, null, options)
+            }
+
+            if (options.outWidth <= 0 || options.outHeight <= 0) {
+                Log.w(TAG, "Invalid image bounds")
+                return null
+            }
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
+            options.inJustDecodeBounds = false
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888
+
+            contentResolver.openInputStream(uri)?.use { input ->
+                BitmapFactory.decodeStream(input, null, options)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error decoding bitmap: ${e.message}", e)
+            null
+        }
+    }
+
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Int {
+        val (height, width) = options.outHeight to options.outWidth
+        var inSampleSize = 1
+        if (height > reqHeight || width > reqWidth) {
+            var halfHeight = height / 2
+            var halfWidth = width / 2
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
+    }
+
+    // Remove selected image
     private fun clearSelectedImage() {
         selectedImageUri = null
         addImageButton.setImageResource(android.R.drawable.ic_input_add)
-        removeImageButton.visibility = android.view.View.GONE
+        addImageButton.imageTintList = null
+        removeImageButton.visibility = View.GONE
     }
 
+    // Date picker
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
         val dialog = DatePickerDialog(
             this,
-            { _, year, month, dayOfMonth ->
+            { _, year, month, day ->
                 val cal = Calendar.getInstance()
-                cal.set(year, month, dayOfMonth, 0, 0, 0)
+                cal.set(year, month, day, 0, 0, 0)
                 selectedDateMillis = cal.timeInMillis
-                dateButton.text = "${dayOfMonth}/${month + 1}/$year"
+                dateButton.text = "$day/${month + 1}/$year"
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -132,19 +226,21 @@ class addExpensesScreen : AppCompatActivity() {
         dialog.show()
     }
 
+    // Save expense
     private fun saveExpense() {
-        val selectedPosition = categoriesSpinner.selectedItemPosition
-        if (selectedPosition <= 0) {
+        val selectedPos = categoriesSpinner.selectedItemPosition
+        if (selectedPos <= 0) {
             Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val selectedCategory = categoriesList.getOrNull(selectedPosition - 1) ?: return
+        val selectedCategory = categoriesList.getOrNull(selectedPos - 1) ?: return
         val description = descriptionEditText.text.toString().trim()
         val amountText = amountEditText.text.toString().trim()
 
         if (description.isBlank() || amountText.isBlank() || selectedDateMillis == null) {
-            Toast.makeText(this, "Please fill in all fields and select a date", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please fill in all fields and select a date", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
