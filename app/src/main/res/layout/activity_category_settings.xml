@@ -10,7 +10,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_media_previous"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,13 +18,15 @@
         android:id="@+id/tvSettingsTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Groceries"
-        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
         android:gravity="center"
+        android:text="Groceries"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constrainedWidth="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilCategoryName"

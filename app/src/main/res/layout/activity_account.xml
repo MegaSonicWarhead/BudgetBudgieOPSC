@@ -15,7 +15,8 @@
         android:background="@android:color/transparent"
         android:contentDescription="menu"
         android:padding="8dp"
-        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_menu_edit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

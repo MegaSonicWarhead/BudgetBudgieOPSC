@@ -112,10 +112,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@android:drawable/screen_background_light_transparent"
+                android:backgroundTint="?attr/colorSurface"
                 android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_input_add"
-                app:tint="@color/material_dynamic_primary40"
+                android:src="@android:drawable/ic_menu_camera"
+                app:tint="?attr/colorPrimary"
+                android:padding="50dp"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
@@ -137,8 +139,9 @@
         android:id="@+id/button2"
         android:layout_width="230dp"
         android:layout_height="75dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="30dp"
         android:text="Submit"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
