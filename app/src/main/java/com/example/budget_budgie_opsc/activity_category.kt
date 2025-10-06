@@ -62,6 +62,7 @@ class activity_category : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
 
+        // 🔹 Burger menu -> Accounts screen
         findViewById<ImageButton>(R.id.btnMenuCategory).setOnClickListener {
             startActivity(Intent(this, activity_account::class.java).apply {
                 putExtra("ACCOUNT_ID", accountId)
@@ -69,7 +70,16 @@ class activity_category : AppCompatActivity() {
             })
         }
 
-        // Confirm minimum & maximum monthly budget
+        // 🔹 Go to Expenses screen (and remember user + account)
+        findViewById<ImageButton>(R.id.btnGoExpenses).setOnClickListener {
+            val intent = Intent(this, ExpensesScreen::class.java).apply {
+                putExtra("USER_ID", currentUserId)
+                putExtra("ACCOUNT_ID", accountId)
+            }
+            startActivity(intent)
+        }
+
+        // 🔹 Confirm monthly budget setup
         findViewById<Button>(R.id.btnConfirmBudget).setOnClickListener {
             val minStr = findViewById<TextInputEditText>(R.id.etMinBudget).text?.toString()
             val maxStr = findViewById<TextInputEditText>(R.id.etMaxBudget).text?.toString()
@@ -102,15 +112,7 @@ class activity_category : AppCompatActivity() {
             }
         }
 
-        findViewById<ImageButton>(R.id.btnGoExpenses).setOnClickListener {
-            val intent = Intent(this, ExpensesScreen::class.java).apply {
-                putExtra("USER_ID", currentUserId)
-                putExtra("ACCOUNT_ID", accountId)
-            }
-            startActivity(intent)
-        }
-
-        // Add new category
+        // 🔹 Add new category
         findViewById<FloatingActionButton>(R.id.fabAddCategory).setOnClickListener {
             val defaultBudget = 1.0
 
