@@ -3,64 +3,69 @@ package com.example.budget_budgie_opsc
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ExpensesScreen : AppCompatActivity() {
-
-    private var userId: Int = -1
-    private var accountId: Int = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_expenses_screen)
-
-        // ✅ Receive the user and account from the previous activity
-        userId = intent.getIntExtra("USER_ID", -1)
-        accountId = intent.getIntExtra("ACCOUNT_ID", -1)
-
-        // ✅ Handle tab clicks
-        val tabLayout = findViewById<TabLayout>(R.id.tabLayoutExpenses)
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.text) {
-                    "Categories" -> {
-                        val intent = Intent(this@ExpensesScreen, activity_category::class.java)
-                        intent.putExtra("USER_ID", userId)
-                        intent.putExtra("ACCOUNT_ID", accountId)
-                        startActivity(intent)
-                        finish() // prevent activity stacking
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
-
-        // ✅ Adjust layout for edge-to-edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_nav)
+        bottomNavigationView.selectedItemId = R.id.nav_expenses
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            // The 'item' variable is the menu item that was clicked
+            when (item.itemId) {
+                // Check which item was clicked by its ID from the menu file
+                R.id.nav_categories -> {
+                    Toast.makeText(this, "Category Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_expenses -> {
+                    val intent = Intent(this, ExpensesScreen::class.java)
+                    startActivity(intent)
+                    //Prevent the screen transition animation
+                    overridePendingTransition(0, 0)
+                    true
+                }
+                R.id.nav_reports -> {
+                    Toast.makeText(this, "Reports Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_profile -> {
+                    val intent = Intent(this, ProfileScreen::class.java)
+                    startActivity(intent)
+                    //Prevent the screen transition animation
+                    overridePendingTransition(0, 0)
+                    true
+                }
+
+                // If the ID doesn't match any of our cases, do nothing
+                else -> false
+            }
+        }
     }
 
-    fun addExpensesClicked(view: View) {
+    fun addExpensesClicked(view: View){
         val intent = Intent(this, addExpensesScreen::class.java)
-        intent.putExtra("USER_ID", userId)
-        intent.putExtra("ACCOUNT_ID", accountId)
         startActivity(intent)
     }
 
-    fun viewExpensesClicked(view: View) {
+    fun viewExpensesClicked(view: View){
         val intent = Intent(this, viewExpenseScreen::class.java)
-        intent.putExtra("USER_ID", userId)
-        intent.putExtra("ACCOUNT_ID", accountId)
         startActivity(intent)
     }
+
+
 }
