@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background= "@color/material_dynamic_neutral90"
+    android:background="@color/material_dynamic_neutral90"
     tools:context=".ExpensesScreen">
 
     <ImageView
@@ -51,26 +51,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_AddExpenses" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:elevation="10dp"
-        android:hapticFeedbackEnabled="true"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        app:itemGravity="center"
-        app:itemIconSize="24dp"
-        app:labelVisibilityMode="labeled"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutExpenses"
+        android:layout_width="409dp"
+        android:layout_height="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:menu="@menu/menu_bottom_navbar">
+        app:layout_constraintStart_toStartOf="parent">
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabExpenses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expenses" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabReports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reports" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Me" />
+    </com.google.android.material.tabs.TabLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
