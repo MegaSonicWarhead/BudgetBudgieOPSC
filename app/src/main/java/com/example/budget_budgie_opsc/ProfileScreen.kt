@@ -8,6 +8,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileScreen : AppCompatActivity() {
 
+    private val currentUserId = 1
+    private val selectedAccountId = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,7 +24,11 @@ class ProfileScreen : AppCompatActivity() {
             when (item.itemId) {
                 // Check which item was clicked by its ID from the menu file
                 R.id.nav_categories -> {
-                    Toast.makeText(this, "Category Clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, activity_category::class.java)
+                    intent.putExtra("USER_ID", currentUserId)
+                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0) // optional: disable animation
                     true
                 }
                 R.id.nav_expenses -> {

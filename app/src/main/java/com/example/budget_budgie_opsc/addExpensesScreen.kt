@@ -77,7 +77,11 @@ class addExpensesScreen : AppCompatActivity() {
             when (item.itemId) {
                 // Check which item was clicked by its ID from the menu file
                 R.id.nav_categories -> {
-                    Toast.makeText(this, "Category Clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, activity_category::class.java)
+                    intent.putExtra("USER_ID", currentUserId)
+                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0) // optional: disable animation
                     true
                 }
                 R.id.nav_expenses -> {
