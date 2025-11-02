@@ -8,13 +8,25 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileScreen : AppCompatActivity() {
 
-    private val currentUserId = 1
-    private val selectedAccountId = 1
+    private lateinit var currentUserId: String
+    private lateinit var selectedAccountId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_budgiepage)
+
+        // Get persisted userId and accountId
+        val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)
+        currentUserId = prefs.getString("USER_ID", "") ?: ""
+        selectedAccountId = prefs.getString("SELECTED_ACCOUNT_ID", "") ?: ""
+        
+        if (currentUserId.isEmpty()) {
+            // No logged-in user, go back to login
+            startActivity(Intent(this, login::class.java))
+            finish()
+            return
+        }
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_nav)
         bottomNavigationView.selectedItemId = R.id.nav_profile

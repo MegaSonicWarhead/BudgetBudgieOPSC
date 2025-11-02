@@ -12,8 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ExpensesScreen : AppCompatActivity() {
 
-    private val currentUserId = 1
-    private val selectedAccountId = 1
+    private lateinit var currentUserId: String
+    private lateinit var selectedAccountId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +23,18 @@ class ExpensesScreen : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // Get persisted userId and accountId
+        val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)
+        currentUserId = prefs.getString("USER_ID", "") ?: ""
+        selectedAccountId = prefs.getString("SELECTED_ACCOUNT_ID", "") ?: ""
+        
+        if (currentUserId.isEmpty()) {
+            // No logged-in user, go back to login
+            startActivity(Intent(this, login::class.java))
+            finish()
+            return
         }
 
 

@@ -14,16 +14,13 @@ import kotlinx.coroutines.launch
 
 class CategorySettingsActivity : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    private var categoryId: Int = -1
+    private var categoryId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category_settings)
 
-        db = AppDatabase.getDatabase(this)
-
-        categoryId = intent.getIntExtra("CATEGORY_ID", -1)
+        categoryId = intent.getStringExtra("CATEGORY_ID") ?: ""
         val name = intent.getStringExtra("CATEGORY_NAME") ?: ""
         val amount = intent.getDoubleExtra("CATEGORY_TOTAL", 0.0)
 
@@ -38,8 +35,8 @@ class CategorySettingsActivity : AppCompatActivity() {
             val newAmount = findViewById<TextInputEditText>(R.id.etCategoryAmount).text?.toString()?.toDoubleOrNull() ?: amount
 
             CoroutineScope(Dispatchers.IO).launch {
-                if (categoryId != -1) {
-                    db.categoryDao().updateNameAndBudget(categoryId, newName, newAmount)
+                if (categoryId.isNotEmpty()) {
+                    FirebaseServiceManager.categoryService.updateNameAndBudget(categoryId, newName, newAmount)
                 }
 
                 // Return the updated category info back to activity_category

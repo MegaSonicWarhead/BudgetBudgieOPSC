@@ -14,7 +14,7 @@ import java.util.*
 
 class ExpenseAdapter(
     private var expenses: List<Expense>,
-    private var categoryMap: Map<Int, String> = emptyMap()
+    private var categoryMap: Map<String, String> = emptyMap()
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     inner class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -67,7 +67,7 @@ class ExpenseAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateCategoryMap(newCategoryMap: Map<Int, String>) {
+    fun updateCategoryMap(newCategoryMap: Map<String, String>) {
         categoryMap = newCategoryMap
         notifyDataSetChanged()
     }

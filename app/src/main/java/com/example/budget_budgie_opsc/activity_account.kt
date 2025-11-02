@@ -15,16 +15,14 @@ import kotlinx.coroutines.launch
 
 class activity_account : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    private var userId: Int = -1
+    private var userId: String = ""
     private lateinit var adapter: AccountAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
 
-        db = AppDatabase.getDatabase(this)
-        userId = intent.getIntExtra("USER_ID", -1)
+        userId = intent.getStringExtra("USER_ID") ?: ""
 
         val recyclerView = findViewById<RecyclerView>(R.id.accountRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -65,7 +63,7 @@ class activity_account : AppCompatActivity() {
             val name = findViewById<EditText>(R.id.etNameChecking).text.toString()
             val balance = findViewById<EditText>(R.id.etBalanceChecking).text.toString().toDoubleOrNull() ?: 0.0
             lifecycleScope.launch {
-                db.accountDao().insert(Account(userId = userId, name = name.ifBlank { "Checking" }, balance = balance))
+                FirebaseServiceManager.accountService.insert(Account(userId = userId, name = name.ifBlank { "Checking" }, balance = balance))
                 loadAccounts()
                 addForm.visibility = View.GONE
             }
@@ -76,7 +74,7 @@ class activity_account : AppCompatActivity() {
             val name = findViewById<EditText>(R.id.etNameCredit).text.toString()
             val balance = findViewById<EditText>(R.id.etBalanceCredit).text.toString().toDoubleOrNull() ?: 0.0
             lifecycleScope.launch {
-                db.accountDao().insert(Account(userId = userId, name = name.ifBlank { "Credit Card" }, balance = balance))
+                FirebaseServiceManager.accountService.insert(Account(userId = userId, name = name.ifBlank { "Credit Card" }, balance = balance))
                 loadAccounts()
                 addForm.visibility = View.GONE
             }
@@ -87,7 +85,7 @@ class activity_account : AppCompatActivity() {
             val name = findViewById<EditText>(R.id.etNameDebt).text.toString()
             val balance = findViewById<EditText>(R.id.etBalanceDebt).text.toString().toDoubleOrNull() ?: 0.0
             lifecycleScope.launch {
-                db.accountDao().insert(Account(userId = userId, name = name.ifBlank { "Debt" }, balance = balance))
+                FirebaseServiceManager.accountService.insert(Account(userId = userId, name = name.ifBlank { "Debt" }, balance = balance))
                 loadAccounts()
                 addForm.visibility = View.GONE
             }
@@ -104,7 +102,7 @@ class activity_account : AppCompatActivity() {
 
     private fun loadAccounts() {
         lifecycleScope.launch {
-            val accounts = db.accountDao().getAccountsForUser(userId)
+            val accounts = FirebaseServiceManager.accountService.getAccountsForUser(userId)
             runOnUiThread {
                 val isFirstTime = accounts.isEmpty()
                 val addButton = findViewById<Button>(R.id.addAccountButton)
@@ -125,7 +123,7 @@ class activity_account : AppCompatActivity() {
                 }
 
                 // If no account selected → default to first
-                if (getSelectedAccount() == -1 && accounts.isNotEmpty()) {
+                if (getSelectedAccount().isEmpty() && accounts.isNotEmpty()) {
                     setSelectedAccount(accounts.first().id)
                 }
 
@@ -153,13 +151,22 @@ class activity_account : AppCompatActivity() {
     }
 
     // SharedPreferences for selected account
-    private fun setSelectedAccount(accountId: Int) {
+    private fun setSelectedAccount(accountId: String) {
         val prefs = getSharedPreferences("BudgetBudgiePrefs", Context.MODE_PRIVATE)
-        prefs.edit().putInt("SELECTED_ACCOUNT_ID", accountId).apply()
+        prefs.edit().putString("SELECTED_ACCOUNT_ID", accountId).apply()
     }
 
-    private fun getSelectedAccount(): Int {
+    private fun getSelectedAccount(): String {
         val prefs = getSharedPreferences("BudgetBudgiePrefs", Context.MODE_PRIVATE)
-        return prefs.getInt("SELECTED_ACCOUNT_ID", -1)
+        // Handle migration from Int to String
+        if (prefs.contains("SELECTED_ACCOUNT_ID")) {
+            val value = prefs.all["SELECTED_ACCOUNT_ID"]
+            return when (value) {
+                is String -> value
+                is Int -> value.toString()
+                else -> ""
+            }
+        }
+        return ""
     }
 }

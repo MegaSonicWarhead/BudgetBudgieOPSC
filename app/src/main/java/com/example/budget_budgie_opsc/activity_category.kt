@@ -19,9 +19,8 @@ import java.util.Locale
 
 class activity_category : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    private var accountId: Int = -1
-    private var currentUserId: Int = -1
+    private var accountId: String = ""
+    private var currentUserId: String = ""
     private lateinit var adapter: CategoryAdapter
     private var totalMonthlyBudget: Double = 0.0
 
@@ -29,11 +28,10 @@ class activity_category : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        db = AppDatabase.getDatabase(this)
-        accountId = intent.getIntExtra("ACCOUNT_ID", -1)
-        currentUserId = intent.getIntExtra("USER_ID", -1)
+        accountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
+        currentUserId = intent.getStringExtra("USER_ID") ?: ""
 
-        if (accountId == -1 || currentUserId == -1) {
+        if (accountId.isEmpty() || currentUserId.isEmpty()) {
             Toast.makeText(this, "Error: Account or User not identified.", Toast.LENGTH_LONG).show()
             finish()
             return
@@ -90,7 +88,7 @@ class activity_category : AppCompatActivity() {
             totalMonthlyBudget = maxAmount
 
             lifecycleScope.launch {
-                db.categoryDao().insert(
+                FirebaseServiceManager.categoryService.insert(
                     Category(
                         userId = currentUserId,
                         accountId = accountId,
@@ -115,7 +113,7 @@ class activity_category : AppCompatActivity() {
             val defaultBudget = 1.0
 
             lifecycleScope.launch {
-                val categories = db.categoryDao().getCategoriesForAccountAndUser(accountId, currentUserId)
+                val categories = FirebaseServiceManager.categoryService.getCategoriesForAccountAndUser(accountId, currentUserId)
                 val generalBudget = categories.firstOrNull { it.name == "General" }?.allocatedAmount ?: 0.0
                 val used = categories.filter { it.name != "General" }.sumOf { it.allocatedAmount.toDouble() }
                 val remainingBudget = generalBudget - used
@@ -132,7 +130,7 @@ class activity_category : AppCompatActivity() {
                 }
 
                 val categoryBudget = if (defaultBudget <= remainingBudget) defaultBudget else remainingBudget
-                db.categoryDao().insert(
+                FirebaseServiceManager.categoryService.insert(
                     Category(
                         userId = currentUserId,
                         accountId = accountId,
@@ -154,7 +152,7 @@ class activity_category : AppCompatActivity() {
 
     private fun loadCategories() {
         lifecycleScope.launch {
-            val categories = db.categoryDao().getCategoriesForAccountAndUser(accountId, currentUserId)
+            val categories = FirebaseServiceManager.categoryService.getCategoriesForAccountAndUser(accountId, currentUserId)
 
             if (totalMonthlyBudget == 0.0) {
                 val general = categories.firstOrNull { it.name == "General" }

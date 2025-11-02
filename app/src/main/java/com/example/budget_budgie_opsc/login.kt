@@ -15,13 +15,9 @@ import kotlinx.coroutines.launch
  */
 class login : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        db = AppDatabase.getDatabase(this)
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
@@ -40,8 +36,12 @@ class login : AppCompatActivity() {
             val password = etPassword.text.toString()
 
             lifecycleScope.launch {
-                val user = db.userDao().login(username, password)
+                val user = FirebaseServiceManager.userService.login(username, password)
                 if (user != null) {
+                    // Save userId to SharedPreferences for persistence
+                    val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)
+                    prefs.edit().putString("USER_ID", user.id).apply()
+                    
                     val intent = Intent(this@login, activity_account::class.java)
                     intent.putExtra("USER_ID", user.id)
                     startActivity(intent)

@@ -21,7 +21,6 @@ import java.util.*
 
 class viewExpenseScreen : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
     private lateinit var recyclerView: RecyclerView
     private lateinit var dateSpinner: Spinner
     private lateinit var categorySpinner: Spinner
@@ -29,8 +28,8 @@ class viewExpenseScreen : AppCompatActivity() {
     private lateinit var startDateButton: Button
     private lateinit var endDateButton: Button
 
-    private val currentUserId = 1
-    private val selectedAccountId = 1
+    private var currentUserId: String = ""
+    private var selectedAccountId: String = ""
 
     private lateinit var adapter: ExpenseAdapter
     private var categoriesList = listOf<Category>()
@@ -50,7 +49,27 @@ class viewExpenseScreen : AppCompatActivity() {
             insets
         }
 
-        db = AppDatabase.getDatabase(this)
+        currentUserId = intent.getStringExtra("USER_ID") ?: ""
+        selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
+
+        // FALLBACK: if empty, read from SharedPreferences
+        if (currentUserId.isEmpty() || selectedAccountId.isEmpty()) {
+            val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)
+            if (currentUserId.isEmpty()) currentUserId = prefs.getString("USER_ID", "") ?: ""
+            if (selectedAccountId.isEmpty()) selectedAccountId = prefs.getString("SELECTED_ACCOUNT_ID", "") ?: ""
+        }
+
+        // If STILL missing, force login/account selection
+        if (currentUserId.isEmpty()) {
+            startActivity(Intent(this, login::class.java))
+            finish()
+            return
+        }
+        if (selectedAccountId.isEmpty()) {
+            startActivity(Intent(this, activity_account::class.java))
+            finish()
+            return
+        }
 
         recyclerView = findViewById(R.id.recyclerExpenses)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -186,7 +205,7 @@ class viewExpenseScreen : AppCompatActivity() {
     private fun loadCategories() {
         lifecycleScope.launch {
             categoriesList = withContext(Dispatchers.IO) {
-                db.categoryDao().getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
+                FirebaseServiceManager.categoryService.getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
             }
 
             val categoryNames = mutableListOf("All Categories")
@@ -212,7 +231,7 @@ class viewExpenseScreen : AppCompatActivity() {
     private fun loadExpenses() {
         lifecycleScope.launch {
             var expenses = withContext(Dispatchers.IO) {
-                db.expenseDao().getExpensesForUserAccount(currentUserId, selectedAccountId)
+                FirebaseServiceManager.expenseService.getExpensesForUserAccount(currentUserId, selectedAccountId)
             }
 
             // Filter by category

@@ -12,7 +12,7 @@ import java.util.Locale
 class AccountAdapter(
     private var accounts: List<Account>,
     private val onAccountClick: (Account) -> Unit,
-    private var selectedAccountId: Int = -1
+    private var selectedAccountId: String = ""
 ) : RecyclerView.Adapter<AccountAdapter.AccountViewHolder>() {
 
     inner class AccountViewHolder(val binding: ItemAccountBinding) :
@@ -55,7 +55,7 @@ class AccountAdapter(
 
     override fun getItemCount() = accounts.size
 
-    fun updateData(newAccounts: List<Account>, selectedId: Int) {
+    fun updateData(newAccounts: List<Account>, selectedId: String) {
         accounts = newAccounts
         selectedAccountId = selectedId
         notifyDataSetChanged()

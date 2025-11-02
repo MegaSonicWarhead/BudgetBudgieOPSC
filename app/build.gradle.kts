@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.devtools.ksp") // Modern replacement for kapt
-
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -51,6 +51,13 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Firebase BoM - manages all Firebase library versions
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    
+    // Firebase products without version numbers (BoM provides them)
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-database")
+
     implementation("com.google.android.material:material:1.11.0")
     implementation("io.coil-kt:coil:2.6.0")
 
@@ -58,12 +65,7 @@ dependencies {
 
     //Lottie
     implementation("com.airbnb.android:lottie:6.5.0")
-
-    val room_version = "2.7.2"
-    // Room components
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    ksp("androidx.room:room-compiler:$room_version") // Replaced kapt
+    
     // Lifecycle components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
@@ -71,4 +73,5 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     // Coroutines (optional, for background work)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }

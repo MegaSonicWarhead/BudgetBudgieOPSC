@@ -1,14 +1,12 @@
 package com.example.budget_budgie_opsc
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.google.firebase.database.IgnoreExtraProperties
 
-@Entity(tableName = "categories")
+@IgnoreExtraProperties
 data class Category(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val userId: Int,
-    val accountId: Int,   // 🔑 Link category to an account
-    val name: String,
-    val allocatedAmount: Double
-
+    val id: String = "",
+    val userId: String = "",
+    val accountId: String = "",   // 🔑 Link category to an account
+    val name: String = "",
+    val allocatedAmount: Double = 0.0
 )

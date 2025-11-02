@@ -24,7 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class addExpensesScreen : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
     private lateinit var categoriesSpinner: Spinner
     private lateinit var descriptionEditText: EditText
     private lateinit var amountEditText: EditText
@@ -33,8 +32,8 @@ class addExpensesScreen : AppCompatActivity() {
     private lateinit var removeImageButton: ImageButton
     private lateinit var dateButton: Button
 
-    private val currentUserId = 1
-    private val selectedAccountId = 1
+    private var currentUserId: String = ""
+    private var selectedAccountId: String = ""
 
     private var categoriesList = listOf<Category>()
     private var selectedImageUri: Uri? = null
@@ -52,7 +51,27 @@ class addExpensesScreen : AppCompatActivity() {
             insets
         }
 
-        db = AppDatabase.getDatabase(this)
+        currentUserId = intent.getStringExtra("USER_ID") ?: ""
+        selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
+
+        // FALLBACK: if empty, read from SharedPreferences
+        if (currentUserId.isEmpty() || selectedAccountId.isEmpty()) {
+            val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)
+            if (currentUserId.isEmpty()) currentUserId = prefs.getString("USER_ID", "") ?: ""
+            if (selectedAccountId.isEmpty()) selectedAccountId = prefs.getString("SELECTED_ACCOUNT_ID", "") ?: ""
+        }
+
+        // If STILL missing, force login/account selection
+        if (currentUserId.isEmpty()) {
+            startActivity(Intent(this, login::class.java))
+            finish()
+            return
+        }
+        if (selectedAccountId.isEmpty()) {
+            startActivity(Intent(this, activity_account::class.java))
+            finish()
+            return
+        }
 
         categoriesSpinner = findViewById(R.id.spnrCategory)
         descriptionEditText = findViewById(R.id.expense_edit_text)
@@ -114,7 +133,7 @@ class addExpensesScreen : AppCompatActivity() {
     private fun loadCategories() {
         lifecycleScope.launch {
             categoriesList = withContext(Dispatchers.IO) {
-                db.categoryDao().getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
+                FirebaseServiceManager.categoryService.getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
             }
 
             val categoryNames = mutableListOf("Select Category")
@@ -302,7 +321,7 @@ class addExpensesScreen : AppCompatActivity() {
         )
 
         lifecycleScope.launch(Dispatchers.IO) {
-            db.expenseDao().insertExpense(expense)
+            FirebaseServiceManager.expenseService.insertExpense(expense)
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@addExpensesScreen, "Expense saved!", Toast.LENGTH_SHORT).show()
                 finish()

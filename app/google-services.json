@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880053446473",
+    "project_id": "budget-budgie-opsc",
+    "storage_bucket": "budget-budgie-opsc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880053446473:android:c4be7f29b4f594971f5c98",
+        "android_client_info": {
+          "package_name": "com.example.budget_budgie_opsc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxnvK47rVH5e5IJCFeTi-8lasMRiIY2KI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
