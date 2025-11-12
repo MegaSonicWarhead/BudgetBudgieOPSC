@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GraphScreen">
+
+    <!-- Dropdown menu - no change -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dropdown_menu_layout"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Year:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <AutoCompleteTextView
+            android:id="@+id/dropdown_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="Monthly" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- === START OF THE REAL FIX === -->
+
+    <!-- Guideline for the floor of the labels -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/graph_floor_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="350dp" />
+
+    <!-- Guideline for the TOP of the graph bar area -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/graph_ceiling_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="200dp" />
+
+    <!-- Guideline for the BASE of the bars (top of the labels) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bar_base_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="270dp" />
+
+
+    <!-- Measurement Labels -->
+    <TextView
+        android:id="@+id/text_max_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="150"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toStartOf="@+id/bar1"
+        app:layout_constraintTop_toTopOf="@+id/graph_ceiling_guideline" />
+
+    <TextView
+        android:id="@+id/text_zero_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintBottom_toBottomOf="@+id/bar_base_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/text_max_value" />
+
+    <TextView
+        android:id="@+id/text_mid_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="75"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintBottom_toTopOf="@+id/text_zero_value"
+        app:layout_constraintEnd_toEndOf="@+id/text_max_value"
+        app:layout_constraintTop_toTopOf="@+id/text_max_value" />
+
+    <!-- Bar 1 Elements -->
+    <View
+        android:id="@+id/bar1"
+        android:layout_width="40dp"
+        android:layout_height="100dp"
+        android:background="#4CAF50"
+        app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/bar2"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/bar1_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Category 1"
+        android:textAppearance="?attr/textAppearanceBody2"
+        app:layout_constraintEnd_toEndOf="@+id/bar1"
+        app:layout_constraintStart_toStartOf="@+id/bar1"
+        app:layout_constraintTop_toBottomOf="@+id/bar1" />
+
+    <ImageView
+        android:id="@+id/bar1_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintEnd_toEndOf="@+id/bar1"
+        app:layout_constraintStart_toStartOf="@+id/bar1"
+        app:layout_constraintTop_toBottomOf="@+id/bar1_category_name" />
+
+    <TextView
+        android:id="@+id/bar1_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="100"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toEndOf="@+id/bar1"
+        app:layout_constraintStart_toStartOf="@+id/bar1"
+        app:layout_constraintTop_toBottomOf="@+id/bar1_icon" />
+
+
+    <!-- Bar 2 Elements -->
+    <View
+        android:id="@+id/bar2"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:background="#2196F3"
+        app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/bar3"
+        app:layout_constraintStart_toEndOf="@+id/bar1" />
+
+    <TextView
+        android:id="@+id/bar2_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Category 2"
+        android:textAppearance="?attr/textAppearanceBody2"
+        app:layout_constraintEnd_toEndOf="@+id/bar2"
+        app:layout_constraintStart_toStartOf="@+id/bar2"
+        app:layout_constraintTop_toBottomOf="@+id/bar2" />
+
+    <ImageView
+        android:id="@+id/bar2_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintEnd_toEndOf="@+id/bar2"
+        app:layout_constraintStart_toStartOf="@+id/bar2"
+        app:layout_constraintTop_toBottomOf="@+id/bar2_category_name" />
+
+    <TextView
+        android:id="@+id/bar2_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="100"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toEndOf="@+id/bar2"
+        app:layout_constraintStart_toStartOf="@+id/bar2"
+        app:layout_constraintTop_toBottomOf="@+id/bar2_icon" />
+
+
+    <!-- Bar 3 Elements -->
+    <View
+        android:id="@+id/bar3"
+        android:layout_width="40dp"
+        android:layout_height="150dp"
+        android:background="#F44336"
+        app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bar2" />
+
+    <TextView
+        android:id="@+id/bar3_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Category 3"
+        android:textAppearance="?attr/textAppearanceBody2"
+        app:layout_constraintEnd_toEndOf="@+id/bar3"
+        app:layout_constraintStart_toStartOf="@+id/bar3"
+        app:layout_constraintTop_toBottomOf="@+id/bar3" />
+
+    <ImageView
+        android:id="@+id/bar3_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintEnd_toEndOf="@+id/bar3"
+        app:layout_constraintStart_toStartOf="@+id/bar3"
+        app:layout_constraintTop_toBottomOf="@+id/bar3_category_name" />
+
+    <TextView
+        android:id="@+id/bar3_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="100"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toEndOf="@+id/bar3"
+        app:layout_constraintStart_toStartOf="@+id/bar3"
+        app:layout_constraintTop_toBottomOf="@+id/bar3_icon" />
+
+    <ImageButton
+        android:id="@+id/button_previous"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_outline"
+        android:contentDescription="Previous"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bar1_value"
+        app:tint="#4CAF50" />
+
+    <ImageButton
+        android:id="@+id/button_next"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_outline"
+        android:contentDescription="Next"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button_previous"
+        app:tint="#4CAF50" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:elevation="10dp"
+        android:hapticFeedbackEnabled="true"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
+        app:itemGravity="center"
+        app:itemIconSize="24dp"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_bottom_navbar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

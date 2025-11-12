@@ -11,63 +11,57 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetBudgieOPSC">
-
+        <activity
+            android:name=".GraphScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Graphscreen"
+            android:exported="false" />
         <activity
             android:name=".activity_category"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/title_activity_category"
             android:theme="@style/Theme.BudgetBudgieOPSC" />
-
         <activity
             android:name=".CategoryDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="Category Detail"
             android:theme="@style/Theme.BudgetBudgieOPSC" />
-
         <activity
             android:name=".CategorySettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="Category Settings"
             android:theme="@style/Theme.BudgetBudgieOPSC" />
-
         <activity
             android:name=".activity_account"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/title_activity_account"
-            android:theme="@style/Theme.BudgetBudgieOPSC" />
-
-        <!-- ✅ Expenses main screen -->
+            android:theme="@style/Theme.BudgetBudgieOPSC" /> <!-- ✅ Expenses main screen -->
         <activity
             android:name=".ExpensesScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="Expenses"
-            android:theme="@style/Theme.BudgetBudgieOPSC" />
-
-        <!-- ✅ Add expenses screen -->
+            android:theme="@style/Theme.BudgetBudgieOPSC" /> <!-- ✅ Add expenses screen -->
         <activity
             android:name=".addExpensesScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="Add Expense"
-            android:theme="@style/Theme.BudgetBudgieOPSC" />
-
-        <!-- ✅ View expenses screen -->
+            android:theme="@style/Theme.BudgetBudgieOPSC" /> <!-- ✅ View expenses screen -->
         <activity
             android:name=".viewExpenseScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="View Expenses"
             android:theme="@style/Theme.BudgetBudgieOPSC" />
-
         <activity
             android:name=".ProfileScreen"
             android:exported="false" />
-
         <activity
             android:name=".login"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -76,16 +70,15 @@
             android:theme="@style/Theme.BudgetBudgieOPSC.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:label="Create Account"
             android:theme="@style/Theme.BudgetBudgieOPSC.Fullscreen" />
-
     </application>
 
 </manifest>

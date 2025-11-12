@@ -61,7 +61,10 @@ class ExpensesScreen : AppCompatActivity() {
                     true
                 }
                 R.id.nav_reports -> {
-                    Toast.makeText(this, "Reports Clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, GraphScreen::class.java)
+                    startActivity(intent)
+                    //Prevent the screen transition animation
+                    overridePendingTransition(0, 0)
                     true
                 }
                 R.id.nav_profile -> {
