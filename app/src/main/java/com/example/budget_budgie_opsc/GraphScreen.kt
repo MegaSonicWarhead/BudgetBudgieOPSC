@@ -59,6 +59,7 @@ class GraphScreen : AppCompatActivity() {
     private lateinit var allBarData: List<BarData>
     private var currentIndex = 0
 
+    //Adds correct suffix for the day of the month
     private fun getDayWithSuffix(day: Int): String {
         return when {
             day in 11..13 -> "${day}th"
@@ -81,6 +82,7 @@ class GraphScreen : AppCompatActivity() {
 
         initializeViews()
         setupDropdownMenu()
+        setupCategoryDropdown()
 
 
         //Determine the current month name
@@ -238,7 +240,7 @@ class GraphScreen : AppCompatActivity() {
 
         //Set up the adapter with the list of months
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, months)
-        val dropdownView: AutoCompleteTextView = findViewById(R.id.dropdown_items)
+        val dropdownView: AutoCompleteTextView = findViewById(R.id.dropdown_month_items)
         dropdownView.setAdapter(adapter)
 
         //Set the initial text to the current month
@@ -252,6 +254,25 @@ class GraphScreen : AppCompatActivity() {
 
             // Fetch new data for the selected month and redraw the graph
             updateGraphForMonth(selectedMonth)
+        }
+    }
+
+    private fun setupCategoryDropdown() {
+        //Create a list of categories
+        val categories = arrayOf("All Categories", "Groceries", "Transport", "Fun", "Rent")
+
+        //adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
+        val dropdownView: AutoCompleteTextView = findViewById(R.id.dropdown_category_items)
+        dropdownView.setAdapter(adapter)
+
+        //Set the initial text
+        dropdownView.setText(categories[0], false) // Default to "All Categories"
+
+        //Toast message
+        dropdownView.setOnItemClickListener { _, _, position, _ ->
+            val selectedCategory = categories[position]
+            Toast.makeText(this, "Category selected: $selectedCategory", Toast.LENGTH_SHORT).show()
         }
     }
 

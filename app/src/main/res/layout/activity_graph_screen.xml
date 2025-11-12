@@ -7,28 +7,48 @@
     android:layout_height="match_parent"
     tools:context=".GraphScreen">
 
-    <!-- Dropdown menu - no change -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dropdown_menu_layout"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:id="@+id/dropdown_month_layout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Year:"
+        android:hint="Month"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <AutoCompleteTextView
-            android:id="@+id/dropdown_items"
+            android:id="@+id/dropdown_month_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:text="Monthly" />
+            android:inputType="none" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- === START OF THE REAL FIX === -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dropdown_category_layout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dropdown_month_layout">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdown_category_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <!-- Guideline for the floor of the labels -->
     <androidx.constraintlayout.widget.Guideline
@@ -52,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="270dp" />
+        app:layout_constraintGuide_begin="350dp" />
 
 
     <!-- Measurement Labels -->
@@ -60,11 +80,13 @@
         android:id="@+id/text_max_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:text="150"
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintEnd_toStartOf="@+id/bar1"
-        app:layout_constraintTop_toTopOf="@+id/graph_ceiling_guideline" />
+        app:layout_constraintTop_toBottomOf="@+id/dropdown_category_layout" />
+
 
     <TextView
         android:id="@+id/text_zero_value"
