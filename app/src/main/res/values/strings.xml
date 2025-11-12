@@ -13,4 +13,10 @@
     <string name="ivan_s_shop">Ivan\'s Shop</string>
     <string name="quests">Quests</string>
     <string name="rewards">Rewards</string>
+    <string name="graph_budget_info">Minimum budget: %1$s  •  Maximum budget: %2$s</string>
+    <string name="graph_budget_info_missing">Budget information not available for this account.</string>
+    <string name="graph_daily_target_missing">Daily target unavailable. Set a minimum budget to receive guidance.</string>
+    <string name="graph_daily_recommendation">Based on the minimum budget, you should only be spending %1$s per day.</string>
+    <string name="graph_daily_points">You Only spent %1$s today. Points earned: %2$d.</string>
+    <string name="graph_unknown_category">Other</string>
 </resources>

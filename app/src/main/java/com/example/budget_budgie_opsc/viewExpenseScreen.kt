@@ -111,6 +111,8 @@ class viewExpenseScreen : AppCompatActivity() {
                 }
                 R.id.nav_reports -> {
                     val intent = Intent(this, GraphScreen::class.java)
+                    intent.putExtra("USER_ID", currentUserId)
+                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
                     startActivity(intent)
                     //Prevent the screen transition animation
                     overridePendingTransition(0, 0)

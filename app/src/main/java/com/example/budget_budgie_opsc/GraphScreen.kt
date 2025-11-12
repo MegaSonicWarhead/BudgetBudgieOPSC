@@ -1,27 +1,29 @@
 package com.example.budget_budgie_opsc
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.NumberFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 // Data class to hold information for each bar
-data class BarData(val categoryName: String, val barValue: Int, val score: Int)
-
-
-// These can be moved inside the class if they are not needed globally
-private var currentUserId: String = ""
-private var selectedAccountId: String = ""
+data class BarData(val categoryName: String, val amount: Double)
 
 class GraphScreen : AppCompatActivity() {
 
@@ -35,6 +37,11 @@ class GraphScreen : AppCompatActivity() {
     private lateinit var maxValueTextView: TextView
     private lateinit var midValueTextView: TextView
     private lateinit var zeroValueTextView: TextView
+
+    // Date filter views
+    private lateinit var startDateButton: Button
+    private lateinit var endDateButton: Button
+    private lateinit var applyFilterButton: Button
 
     // Navigation button views
     private lateinit var buttonNext: ImageButton
@@ -55,20 +62,20 @@ class GraphScreen : AppCompatActivity() {
     private lateinit var bar3Icon: ImageView
     private lateinit var bar3Value: TextView
 
+    // Budget information
+    private lateinit var tvBudgetInfo: TextView
+    private lateinit var tvDailyRecommendation: TextView
+    private lateinit var tvDailyPoints: TextView
+
     // --- State Management Properties ---
     private lateinit var allBarData: List<BarData>
     private var currentIndex = 0
-
-    //Adds correct suffix for the day of the month
-    private fun getDayWithSuffix(day: Int): String {
-        return when {
-            day in 11..13 -> "${day}th"
-            day % 10 == 1 -> "${day}st"
-            day % 10 == 2 -> "${day}nd"
-            day % 10 == 3 -> "${day}rd"
-            else -> "${day}th"
-        }
-    }
+    private var currentUserId: String = ""
+    private var selectedAccountId: String = ""
+    private var startDateMillis: Long = 0L
+    private var endDateMillis: Long = 0L
+    private var minBudget: Double = 0.0
+    private var maxBudget: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,20 +88,37 @@ class GraphScreen : AppCompatActivity() {
         }
 
         initializeViews()
-        setupDropdownMenu()
-        setupCategoryDropdown()
 
+        currentUserId = intent.getStringExtra("USER_ID") ?: ""
+        selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
 
-        //Determine the current month name
-        val months = arrayOf(
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        )
-        val currentMonthIndex = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH)
-        val currentMonthName = months[currentMonthIndex]
+        if (currentUserId.isEmpty() || selectedAccountId.isEmpty()) {
+            val prefs = getSharedPreferences("BudgetBudgiePrefs", MODE_PRIVATE)
+            if (currentUserId.isEmpty()) currentUserId = prefs.getString("USER_ID", "") ?: ""
+            if (selectedAccountId.isEmpty()) selectedAccountId = prefs.getString("SELECTED_ACCOUNT_ID", "") ?: ""
+        }
 
-        //Load the data for the current month initially
-        updateGraphForMonth(currentMonthName)
+        if (currentUserId.isEmpty()) {
+            startActivity(Intent(this, login::class.java))
+            finish()
+            return
+        }
+
+        if (selectedAccountId.isEmpty()) {
+            startActivity(Intent(this, activity_account::class.java))
+            finish()
+            return
+        }
+
+        setDefaultDateRange()
+        updateDateLabels()
+
+        startDateButton.setOnClickListener { showDatePicker(isStart = true) }
+        endDateButton.setOnClickListener { showDatePicker(isStart = false) }
+        applyFilterButton.setOnClickListener { loadGraphData() }
+
+        loadBudgets()
+        loadGraphData()
 
         buttonNext.setOnClickListener {
             // Move to the next set of data if possible
@@ -117,6 +141,10 @@ class GraphScreen : AppCompatActivity() {
      * Initializes all view properties by finding them in the layout.
      */
     private fun initializeViews() {
+        startDateButton = findViewById(R.id.btnStartDate)
+        endDateButton = findViewById(R.id.btnEndDate)
+        applyFilterButton = findViewById(R.id.btnApplyFilter)
+
         // Bars
         bar1 = findViewById(R.id.bar1)
         bar2 = findViewById(R.id.bar2)
@@ -145,14 +173,28 @@ class GraphScreen : AppCompatActivity() {
         bar3CatName = findViewById(R.id.bar3_category_name)
         bar3Icon = findViewById(R.id.bar3_icon)
         bar3Value = findViewById(R.id.bar3_value)
+
+        tvBudgetInfo = findViewById(R.id.tvBudgetInfo)
+        tvDailyRecommendation = findViewById(R.id.tvDailyRecommendation)
+        tvDailyPoints = findViewById(R.id.tvDailyPoints)
     }
 
     /**
      * Draws/refreshes the graph based on the currentIndex and the full dataset.
      */
     private fun drawGraph() {
-        //Calculate maxValue from barValue
-        val maxValue = allBarData.maxOfOrNull { it.barValue } ?: 150
+        if (allBarData.isEmpty()) {
+            listOf(bar1, bar2, bar3).forEach { it.visibility = View.INVISIBLE }
+            listOf(bar1CatName, bar2CatName, bar3CatName).forEach { it.visibility = View.INVISIBLE }
+            listOf(bar1Icon, bar2Icon, bar3Icon).forEach { it.visibility = View.INVISIBLE }
+            listOf(bar1Value, bar2Value, bar3Value).forEach { it.visibility = View.INVISIBLE }
+            setupMeasurementAxis(0.0)
+            buttonPrevious.visibility = View.INVISIBLE
+            buttonNext.visibility = View.INVISIBLE
+            return
+        }
+
+        val maxValue = allBarData.maxOfOrNull { it.amount }?.coerceAtLeast(1.0) ?: 1.0
         val visibleData = allBarData.drop(currentIndex).take(3)
 
         setupMeasurementAxis(maxValue)
@@ -164,35 +206,22 @@ class GraphScreen : AppCompatActivity() {
             Triple(bar3CatName, bar3Icon, bar3Value)
         )
 
-        // Update visible bars and their details
         for (i in visibleData.indices) {
             val data = visibleData[i]
             val barView = allBars[i]
             val detailViews = allDetails[i]
 
-            // Make views visible
             barView.visibility = View.VISIBLE
-            detailViews.first.visibility = View.VISIBLE  // Category Name
-            detailViews.second.visibility = View.VISIBLE // Icon
-            detailViews.third.visibility = View.VISIBLE  // Value
+            detailViews.first.visibility = View.VISIBLE
+            detailViews.second.visibility = View.VISIBLE
+            detailViews.third.visibility = View.VISIBLE
 
-
-            //Set bar height and category name
-            setBarHeight(barView, data.barValue, maxValue)
+            setBarHeight(barView, data.amount, maxValue)
             detailViews.first.text = data.categoryName
-
-            //Format the score for display (e.g., "92/100")
-            detailViews.third.text = "${data.score}/100"
-
-            //Check the score and set the correct image
-            if (data.score >= 70) {
-                detailViews.second.setImageResource(R.drawable.ic_green_up)
-            } else {
-                detailViews.second.setImageResource(R.drawable.ic_red_up)
-            }
+            detailViews.third.text = formatCurrency(data.amount)
+            detailViews.second.setImageResource(R.drawable.ic_green_up)
         }
 
-        // Hide any unused bars and their details
         for (i in visibleData.size until allBars.size) {
             allBars[i].visibility = View.INVISIBLE
             allDetails[i].first.visibility = View.INVISIBLE
@@ -200,18 +229,18 @@ class GraphScreen : AppCompatActivity() {
             allDetails[i].third.visibility = View.INVISIBLE
         }
 
-        // Update button visibility
         buttonPrevious.visibility = if (currentIndex > 0) View.VISIBLE else View.INVISIBLE
         buttonNext.visibility = if (currentIndex + 3 < allBarData.size) View.VISIBLE else View.INVISIBLE
-}
+    }
 
-    private fun setBarHeight(bar: View, value: Int, maxValue: Int) {
+    private fun setBarHeight(bar: View, value: Double, maxValue: Double) {
         val maxBarHeightInDp = 150
         val density = resources.displayMetrics.density
         val maxBarHeightInPixels = (maxBarHeightInDp * density).toInt()
-        val newHeight = (value.toFloat() / maxValue.toFloat()) * maxBarHeightInPixels
+        val ratio = if (maxValue <= 0.0) 0f else (value.toFloat() / maxValue.toFloat())
+        val newHeight = (ratio * maxBarHeightInPixels).toInt().coerceAtLeast(1)
         val currentParams = bar.layoutParams
-        currentParams.height = newHeight.toInt()
+        currentParams.height = newHeight
         bar.layoutParams = currentParams
 
         bar.post {
@@ -225,84 +254,152 @@ class GraphScreen : AppCompatActivity() {
         }
     }
 
-    private fun setupMeasurementAxis(maxValue: Int) {
-        maxValueTextView.text = maxValue.toString()
-        midValueTextView.text = (maxValue / 2).toString()
-        zeroValueTextView.text = "0"
+    private fun setupMeasurementAxis(maxValue: Double) {
+        maxValueTextView.text = formatCurrency(maxValue)
+        midValueTextView.text = formatCurrency(maxValue / 2)
+        zeroValueTextView.text = formatCurrency(0.0)
     }
 
-    private fun setupDropdownMenu() {
-        //Create a list of months
-        val months = arrayOf(
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
+    private fun formatCurrency(amount: Double): String {
+        val formatter = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
+        return formatter.format(amount)
+    }
+
+    private fun setDefaultDateRange() {
+        val calendar = Calendar.getInstance()
+        endDateMillis = getStartOfDay(calendar.timeInMillis) + MILLIS_IN_DAY - 1
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        startDateMillis = getStartOfDay(calendar.timeInMillis)
+    }
+
+    private fun getStartOfDay(timeInMillis: Long): Long {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = timeInMillis
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal.timeInMillis
+    }
+
+    private fun updateDateLabels() {
+        startDateButton.text = formatDate(startDateMillis)
+        endDateButton.text = formatDate(endDateMillis)
+    }
+
+    private fun formatDate(timestamp: Long): String {
+        val formatter = java.text.SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        return formatter.format(Date(timestamp))
+    }
+
+    private fun showDatePicker(isStart: Boolean) {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = if (isStart) startDateMillis else endDateMillis
+        DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val cal = Calendar.getInstance()
+                cal.set(year, month, dayOfMonth, 0, 0, 0)
+                val selectedStart = getStartOfDay(cal.timeInMillis)
+                if (isStart) {
+                    startDateMillis = selectedStart
+                    if (startDateMillis > endDateMillis) {
+                        endDateMillis = startDateMillis + MILLIS_IN_DAY - 1
+                    }
+                } else {
+                    endDateMillis = selectedStart + MILLIS_IN_DAY - 1
+                    if (endDateMillis < startDateMillis) {
+                        startDateMillis = getStartOfDay(endDateMillis)
+                    }
+                }
+                updateDateLabels()
+                loadGraphData()
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
+
+    private fun loadBudgets() {
+        lifecycleScope.launch {
+            val account = withContext(Dispatchers.IO) {
+                FirebaseServiceManager.accountService.getAccountById(selectedAccountId)
+            }
+            if (account != null) {
+                minBudget = account.minBudget
+                maxBudget = account.maxBudget
+                tvBudgetInfo.text = getString(
+                    R.string.graph_budget_info,
+                    formatCurrency(minBudget),
+                    formatCurrency(maxBudget)
+                )
+                updateDailySummary(0.0)
+            } else {
+                tvBudgetInfo.text = getString(R.string.graph_budget_info_missing)
+                tvDailyRecommendation.text = ""
+                tvDailyPoints.text = ""
+            }
+        }
+    }
+
+    private fun loadGraphData() {
+        lifecycleScope.launch {
+            val categories = withContext(Dispatchers.IO) {
+                FirebaseServiceManager.categoryService.getCategoriesForAccountAndUser(selectedAccountId, currentUserId)
+            }
+            val expenses = withContext(Dispatchers.IO) {
+                FirebaseServiceManager.expenseService.getExpensesForUserAccount(currentUserId, selectedAccountId)
+            }
+
+            val categoryMap = categories.associateBy { it.id }
+            val filteredExpenses = expenses.filter { it.date in startDateMillis..endDateMillis }
+
+            val totals = filteredExpenses
+                .groupBy { it.categoryId }
+                .map { (categoryId, list) ->
+                    val name = categoryMap[categoryId]?.name ?: getString(R.string.graph_unknown_category)
+                    BarData(name, list.sumOf { it.amount })
+                }
+                .sortedByDescending { it.amount }
+
+            allBarData = totals
+            currentIndex = 0
+            drawGraph()
+
+            val todayStart = getStartOfDay(System.currentTimeMillis())
+            val todayEnd = todayStart + MILLIS_IN_DAY - 1
+            val todaysTotal = filteredExpenses
+                .filter { it.date in todayStart..todayEnd }
+                .sumOf { it.amount }
+            updateDailySummary(todaysTotal)
+        }
+    }
+
+    private fun updateDailySummary(todaysTotal: Double) {
+        if (minBudget <= 0.0) {
+            tvDailyRecommendation.text = getString(R.string.graph_daily_target_missing)
+            tvDailyPoints.text = ""
+            return
+        }
+
+        val dailyTarget = minBudget / 30.0
+        tvDailyRecommendation.text = getString(
+            R.string.graph_daily_recommendation,
+            formatCurrency(dailyTarget)
         )
 
-        //Set up the adapter with the list of months
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, months)
-        val dropdownView: AutoCompleteTextView = findViewById(R.id.dropdown_month_items)
-        dropdownView.setAdapter(adapter)
-
-        //Set the initial text to the current month
-        val currentMonthIndex = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH)
-        dropdownView.setText(months[currentMonthIndex], false)
-
-        //Set the listener to handle month selection
-        dropdownView.setOnItemClickListener { _, _, position, _ ->
-            val selectedMonth = months[position]
-            Toast.makeText(this, "Selected Month: $selectedMonth", Toast.LENGTH_SHORT).show()
-
-            // Fetch new data for the selected month and redraw the graph
-            updateGraphForMonth(selectedMonth)
+        val points = if (todaysTotal <= dailyTarget) {
+            val ratio = (dailyTarget - todaysTotal) / dailyTarget
+            (ratio * 100).coerceIn(0.0, 100.0)
+        } else {
+            0.0
         }
-    }
-
-    private fun setupCategoryDropdown() {
-        //Create a list of categories
-        val categories = arrayOf("All Categories", "Groceries", "Transport", "Fun", "Rent")
-
-        //adapter
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
-        val dropdownView: AutoCompleteTextView = findViewById(R.id.dropdown_category_items)
-        dropdownView.setAdapter(adapter)
-
-        //Set the initial text
-        dropdownView.setText(categories[0], false) // Default to "All Categories"
-
-        //Toast message
-        dropdownView.setOnItemClickListener { _, _, position, _ ->
-            val selectedCategory = categories[position]
-            Toast.makeText(this, "Category selected: $selectedCategory", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun updateGraphForMonth(monthName: String) {
-        //This needs yo update from the database, RN it uses randomly generated data for the daily spending
-
-        val calendar = java.util.Calendar.getInstance()
-        // Set calendar to the selected month
-        val monthIndex = arrayOf(
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ).indexOf(monthName)
-        calendar.set(java.util.Calendar.MONTH, monthIndex)
-
-        // Get the total number of days in that month
-        val daysInMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH)
-
-        // Generate sample data for each day of the month
-        val dailyData = (1..daysInMonth).map { day ->
-            val randomBarValue = (10..300).random() // Random expense value
-            val randomScore = (20..100).random()    // Random score
-            BarData(getDayWithSuffix(day), randomBarValue, randomScore)
-        }
-
-        // Update the master data list
-        allBarData = dailyData
-        // Reset the index to the beginning
-        currentIndex = 0
-        // Redraw the graph with the new daily data
-        drawGraph()
+        tvDailyPoints.text = getString(
+            R.string.graph_daily_points,
+            formatCurrency(todaysTotal),
+            points.toInt()
+        )
     }
 
     private fun setupBottomNavigation() {
@@ -320,6 +417,8 @@ class GraphScreen : AppCompatActivity() {
                 }
                 R.id.nav_expenses -> {
                     val intent = Intent(this, ExpensesScreen::class.java)
+                    intent.putExtra("USER_ID", currentUserId)
+                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
                     startActivity(intent)
                     overridePendingTransition(0, 0)
                     true
@@ -327,6 +426,8 @@ class GraphScreen : AppCompatActivity() {
                 R.id.nav_reports -> true // Already on this screen
                 R.id.nav_profile -> {
                     val intent = Intent(this, ProfileScreen::class.java)
+                    intent.putExtra("USER_ID", currentUserId)
+                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
                     startActivity(intent)
                     overridePendingTransition(0, 0)
                     true
@@ -334,5 +435,9 @@ class GraphScreen : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    companion object {
+        private const val MILLIS_IN_DAY = 24 * 60 * 60 * 1000L
     }
 }
