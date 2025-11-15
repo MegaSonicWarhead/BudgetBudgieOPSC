@@ -13,7 +13,7 @@ import androidx.room.RoomDatabase
         Category::class,
         Expense::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true // helps track migrations if you add them later
 )
 abstract class AppDatabase : RoomDatabase() {
