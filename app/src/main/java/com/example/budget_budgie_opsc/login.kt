@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import app.rive.runtime.kotlin.core.Rive
+import com.example.budget_budgie_opsc.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
 
 /**
@@ -15,9 +17,18 @@ import kotlinx.coroutines.launch
  */
 class login : AppCompatActivity() {
 
+    private lateinit var binding : ActivityLoginBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        //setContentView(R.layout.activity_login)
+        //Rive Stuff
+        //Ivan Strings are in Values
+        Rive.init(this)
+        //binding.loginCharacter.controller.setBooleanState("Main", "isIdle", false) (Example of Swapping Conditions
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)

@@ -19,6 +19,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -65,6 +66,9 @@ dependencies {
 
     //Lottie
     implementation("com.airbnb.android:lottie:6.5.0")
+
+    //Rive
+    implementation("app.rive:rive-android:5.0.0")
     
     // Lifecycle components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")

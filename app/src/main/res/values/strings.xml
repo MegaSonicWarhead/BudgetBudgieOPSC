@@ -19,4 +19,9 @@
     <string name="graph_daily_recommendation">Based on the minimum budget, you should only be spending %1$s per day.</string>
     <string name="graph_daily_points">You Only spent %1$s today. Points earned: %2$d.</string>
     <string name="graph_unknown_category">Other</string>
+    <string name="stateMachineName">Main</string>
+    <string name="ivanIsAngry">isAngry</string>
+    <string name="ivanIsUnhappy">isUnhappy</string>
+    <string name="ivanIsIdle">isIdle</string>
+    <string name="ivanIsHappy">isHappy</string>
 </resources>

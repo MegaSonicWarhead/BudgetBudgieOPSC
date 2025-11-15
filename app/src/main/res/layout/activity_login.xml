@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp">
@@ -9,7 +10,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         android:text="Budget Budgie"
         android:textAlignment="center"
@@ -22,31 +23,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginTop="32dp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardAvatar"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="32dp"
-        app:cardBackgroundColor="@color/cardview_light_background"
-        app:cardCornerRadius="70dp"
-        app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <app.rive.runtime.kotlin.RiveAnimationView
+        android:id="@+id/loginCharacter"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/tilUsername"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/budgetbudgie_noback" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="WIP"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:riveResource="@raw/ivan_framed"
+        app:riveStateMachine="Main" />
 
     <!-- Username Input -->
     <com.google.android.material.textfield.TextInputLayout
@@ -61,7 +47,7 @@
         app:hintTextColor="@android:color/white"
         app:hintEnabled="true"
         app:hintAnimationEnabled="false"
-        app:layout_constraintTop_toBottomOf="@id/cardAvatar"
+        app:layout_constraintTop_toBottomOf="@id/loginCharacter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

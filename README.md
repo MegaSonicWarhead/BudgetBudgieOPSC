@@ -1,1 +1,1 @@
-//Stetup for readme
+//Setup for readme
