@@ -5,39 +5,49 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     tools:context=".GraphScreen">
 
     <Button
         android:id="@+id/btnStartDate"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/budgie_dark_green"
+        android:fontFamily="@font/quicksand_variable_font"
         android:text="Start Date"
+        android:textColor="@color/budgie_green"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/graph_ceiling_guideline"
         app:layout_constraintEnd_toStartOf="@+id/btnEndDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnEndDate"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/budgie_dark_green"
+        android:fontFamily="@font/quicksand_variable_font"
+        android:textColor="@color/budgie_green"
+        android:textStyle="bold"
         android:text="End Date"
         app:layout_constraintBaseline_toBaselineOf="@+id/btnStartDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnStartDate" />
 
-    <Button
-        android:id="@+id/btnApplyFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="Apply"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartDate" />
+<!--    <Button-->
+<!--        android:id="@+id/btnApplyFilter"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:text="Apply"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/btnStartDate" />-->
 
 
     <!-- Guideline for the floor of the labels -->
@@ -233,6 +243,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/quicksand_variable_font"
         android:text="Budget info"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintEnd_toEndOf="parent"
@@ -246,8 +257,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/quicksand_variable_font"
         android:text="Daily recommendation"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBudgetInfo" />
@@ -260,6 +271,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/quicksand_variable_font"
         android:text="Daily points"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintEnd_toEndOf="parent"
@@ -278,7 +290,7 @@
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar1_value"
-        app:tint="#4CAF50" />
+        app:tint="@color/black" />
 
     <ImageButton
         android:id="@+id/button_next"
@@ -290,13 +302,15 @@
         android:src="@drawable/ic_arrow_forward"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/button_previous"
-        app:tint="#4CAF50" />
+        app:tint="@color/black" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/budgie_green"
         android:layout_gravity="bottom"
+        android:layout_weight="1"
         android:elevation="10dp"
         android:hapticFeedbackEnabled="true"
         android:paddingStart="2dp"
@@ -306,8 +320,12 @@
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_bottom_navbar" />
+        app:layout_constraintVertical_chainStyle="packed"
+        app:menu="@menu/menu_bottom_navbar">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

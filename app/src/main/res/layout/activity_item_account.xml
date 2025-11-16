@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/budgie_blue"
         android:padding="16dp">
 
         <TextView
@@ -23,9 +24,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true"
+            android:fontFamily="@font/quicksand_variable_font"
             android:text="Account Name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -33,7 +34,7 @@
             android:id="@+id/tvAccountBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
+            android:fontFamily="@font/quicksand_variable_font"
             android:text="R0.00"
             android:textSize="16sp"
             android:textStyle="bold" />

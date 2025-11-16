@@ -12,6 +12,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:padding="16dp"
+        android:background="@color/cardview_shadow_end_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -19,6 +20,7 @@
             android:id="@+id/tvCategoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_variable_font"
             android:textStyle="bold"/>
 
         <com.google.android.material.slider.Slider
@@ -28,12 +30,18 @@
             android:layout_marginTop="8dp"
             android:valueFrom="0.0"
             android:valueTo="100.0"
+            app:thumbColor="@color/budgie_dark_green"
+            app:tickColorActive="@color/budgie_dark_green"
+            app:tickColorInactive="@color/budgie_dark_green"
+            app:trackColorActive="@color/budgie_dark_green"
+            app:trackColorInactive="@color/budgie_green"
             app:labelBehavior="gone"/>
 
         <TextView
             android:id="@+id/tvAmountAvailable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_variable_font"
             android:layout_marginTop="6dp"/>
     </LinearLayout>
 

@@ -7,11 +7,15 @@
         android:id="@+id/btnAccounts"
         android:text="Accounts"
         android:layout_width="200dp"
+        android:backgroundTint="@color/budgie_dark_green"
+        android:textColor="@color/budgie_green"
         android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/btnCategories"
         android:text="Categories"
         android:layout_width="200dp"
+        android:backgroundTint="@color/budgie_dark_green"
+        android:textColor="@color/budgie_green"
         android:layout_height="wrap_content"/>
 </LinearLayout>
