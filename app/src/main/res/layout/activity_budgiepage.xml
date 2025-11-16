@@ -81,33 +81,18 @@
             android:contentDescription="divider line"
             app:srcCompat="@drawable/divider_line" />
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/split_button_group"
-            android:layout_width="wrap_content"
+        <!--horizontal carousel -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/budgie_shop_carousel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            app:selectionRequired="false"
-            app:singleSelection="false">
+            android:layout_marginVertical="16dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <!-- Main Action Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/main_action_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/options" />
-
-            <!-- Dropdown Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/dropdown_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hapticFeedbackEnabled="true"
-                app:icon="@drawable/m3_split_button_chevron_avd"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp" />
-
-        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <FrameLayout
             android:layout_width="match_parent"

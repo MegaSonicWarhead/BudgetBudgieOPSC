@@ -2,8 +2,9 @@ package com.example.budget_budgie_opsc
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileScreen : AppCompatActivity() {
@@ -13,56 +14,70 @@ class ProfileScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Use the correct layout file that contains the RecyclerView
         setContentView(R.layout.activity_budgiepage)
 
-        // Get persisted userId and accountId
-        val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)
-        currentUserId = prefs.getString("USER_ID", "") ?: ""
-        selectedAccountId = prefs.getString("SELECTED_ACCOUNT_ID", "") ?: ""
-        
+        // It's good practice to retrieve any passed-in data at the start
+        currentUserId = intent.getStringExtra("USER_ID") ?: ""
+        selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
+
         if (currentUserId.isEmpty()) {
-            // No logged-in user, go back to login
-            startActivity(Intent(this, login::class.java))
-            finish()
-            return
+
         }
 
+        // Set up the main functionalities of this screen
+        setupShopCarousel()
+        setupBottomNavigation()
+    }
+
+    private fun setupShopCarousel() {
+        val recyclerView: RecyclerView = findViewById(R.id.budgie_shop_carousel)
+
+        val shopItems = listOf(
+            ShopItem("Ball & Chain", 100, R.drawable.ic_big_ball),
+            ShopItem("Glasses", 75, R.drawable.ic_glasses),
+            ShopItem("Winky Glasses", 120, R.drawable.ic_glasses2),
+            ShopItem("Knife Fight Memorabilia", 80, R.drawable.ic_mother_russia),
+            ShopItem("Cool Glasses", 50, R.drawable.ic_lightningglasses)
+        )
+
+        val adapter = BudgieShopAdapter(shopItems)
+
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.adapter = adapter
+    }
+
+    private fun setupBottomNavigation() {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_nav)
+        // Set the "Profile" item as selected
         bottomNavigationView.selectedItemId = R.id.nav_profile
 
         bottomNavigationView.setOnItemSelectedListener { item ->
-            // The 'item' variable is the menu item that was clicked
             when (item.itemId) {
-                // Check which item was clicked by its ID from the menu file
                 R.id.nav_categories -> {
                     val intent = Intent(this, activity_category::class.java)
                     intent.putExtra("USER_ID", currentUserId)
                     intent.putExtra("ACCOUNT_ID", selectedAccountId)
                     startActivity(intent)
-                    overridePendingTransition(0, 0) // optional: disable animation
+                    overridePendingTransition(0, 0)
                     true
                 }
                 R.id.nav_expenses -> {
                     val intent = Intent(this, ExpensesScreen::class.java)
                     startActivity(intent)
-                    //Prevent the screen transition animation
                     overridePendingTransition(0, 0)
                     true
                 }
                 R.id.nav_reports -> {
                     val intent = Intent(this, GraphScreen::class.java)
                     startActivity(intent)
-                    //Prevent the screen transition animation
                     overridePendingTransition(0, 0)
                     true
                 }
                 R.id.nav_profile -> {
-                    Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show()
+                    // Already on this screen, do nothing
                     true
                 }
-
-                // If the ID doesn't match any of our cases, do nothing
                 else -> false
             }
         }
