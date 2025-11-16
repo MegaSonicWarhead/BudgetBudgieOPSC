@@ -59,8 +59,7 @@
         <TextView
             android:id="@+id/tvCategoryNameDetail"
             android:layout_width="306dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_height="36dp"
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:text="Groceries"
@@ -106,62 +105,46 @@
         android:id="@+id/tvCurrentAvailable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="25dp"
         android:fontFamily="monospace"
         android:gravity="center"
         android:text="CURRENT AMOUNT AVAILABLE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sliderDetail" />
+        app:layout_constraintTop_toBottomOf="@+id/ivan" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/avatarCard"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        app:cardBackgroundColor="#DDDDDD"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCurrentAvailable">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/budgetbudgie_noback" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Animated Ivan: WIP" />
-
-    </com.google.android.material.card.MaterialCardView>
+    <app.rive.runtime.kotlin.RiveAnimationView
+        android:id="@+id/ivan"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/sliderDetail"
+        app:riveResource="@raw/ivan_framed"
+        app:riveStateMachine="Main" />
 
     <View
+        android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
         android:background="#DDDDDD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/avatarCard" />
+        tools:layout_editor_absoluteY="50dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCategorySettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:text="Category Settings"
         app:icon="@android:drawable/ic_menu_manage"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
         app:iconTint="@color/cardview_light_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/avatarCard" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCurrentAvailable" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

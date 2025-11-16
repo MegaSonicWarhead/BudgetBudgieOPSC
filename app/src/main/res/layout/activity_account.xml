@@ -2,21 +2,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="50dp">
 
     <ImageButton
         android:id="@+id/btnMenu"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        style="@android:style/Widget.Material.ImageButton"
+        android:layout_width="70dp"
+        android:layout_height="42dp"
+        android:layout_margin="15dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/transparent"
-        android:contentDescription="menu"
-        android:padding="8dp"
-        android:scaleType="centerInside"
-        android:src="@android:drawable/ic_menu_edit"
+        android:contentDescription="back to menu"
+        android:scaleType="fitXY"
+        android:scaleX="0.8"
+        android:scaleY="1.5"
+        android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,16 +118,20 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        app:tint="@android:color/black"
-        app:backgroundTint="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/addAccountButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        android:layout_gravity="center"
+        style = "?attr/floatingActionButtonLargeStyle"
+        app:srcCompat= "@drawable/flat_add_icon"
+        app:maxImageSize="50dp"
+
         app:layout_constraintBottom_toTopOf="@id/netFooterGroup"
-        app:maxImageSize="48dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addAccountButton"
+        app:layout_constraintVertical_bias="0.512"
+        app:tint="@android:color/black" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/accountRecyclerView"

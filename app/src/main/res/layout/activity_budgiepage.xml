@@ -63,15 +63,13 @@
 
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/animatedIvan"
-            android:layout_width="192dp"
-            android:layout_height="201dp"
-            android:layout_gravity="center"
-            android:layout_marginVertical="25dp"
-            android:contentDescription="animated ivan"
-            android:src="@drawable/budgetbudgie_noback"
-            tools:srcCompat="@drawable/budgetbudgie_noback" />
+        <app.rive.runtime.kotlin.RiveAnimationView
+            android:id="@+id/loginCharacter"
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:layout_marginTop="15dp"
+            app:riveResource="@raw/ivan_framed"
+            app:riveStateMachine="Main" />
 
         <ImageView
             android:id="@+id/imageView8"

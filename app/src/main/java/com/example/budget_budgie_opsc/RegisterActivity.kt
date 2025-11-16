@@ -6,13 +6,22 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import app.rive.runtime.kotlin.core.Rive
+import com.example.budget_budgie_opsc.databinding.ActivityRegisterBinding
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityRegisterBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //setContentView(R.layout.activity_register)
+
+        Rive.init(this)
+        binding.ivan.controller.setBooleanState("Main", "isHappy", true)        //isHappy that someone is making an account
 
         val etNewUsername = findViewById<EditText>(R.id.etNewUsername)
         val etNewPassword = findViewById<EditText>(R.id.etNewPassword)

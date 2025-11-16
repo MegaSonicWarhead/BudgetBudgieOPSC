@@ -8,23 +8,22 @@
     android:background= "@color/material_dynamic_neutral90"
     tools:context=".ExpensesScreen">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="264dp"
-        android:layout_height="217dp"
-        android:layout_marginTop="88dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
+    <app.rive.runtime.kotlin.RiveAnimationView
+        android:id="@+id/ivan"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/budgetbudgie_noback"
-        tools:srcCompat="@drawable/budgetbudgie_noback" />
+        app:layout_constraintVertical_bias="0.105"
+        app:riveResource="@raw/ivan_framed"
+        app:riveStateMachine="Main"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/btn_AddExpenses"
+        android:layout_marginTop="40dp"
         android:layout_width="250dp"
         android:layout_height="70dp"
-        android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-medium"
         android:onClick="addExpensesClicked"
         android:text="Add Expenses"
@@ -33,7 +32,7 @@
         app:cornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/ivan" />
 
     <Button
         android:id="@+id/btn_ViewExpenses"

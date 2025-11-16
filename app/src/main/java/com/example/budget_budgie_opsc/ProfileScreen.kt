@@ -4,17 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import app.rive.runtime.kotlin.core.Rive
+import com.example.budget_budgie_opsc.databinding.ActivityBudgiepageBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileScreen : AppCompatActivity() {
 
     private lateinit var currentUserId: String
     private lateinit var selectedAccountId: String
+    private lateinit var binding: ActivityBudgiepageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityBudgiepageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //setContentView(R.layout.activity_budgiepage)
 
-        setContentView(R.layout.activity_budgiepage)
+        //Rive
+        Rive.init(this)
 
         // Get persisted userId and accountId
         val prefs = getSharedPreferences("BudgetBudgiePrefs", android.content.Context.MODE_PRIVATE)

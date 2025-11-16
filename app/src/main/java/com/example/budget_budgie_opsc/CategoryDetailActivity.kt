@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import app.rive.runtime.kotlin.core.Rive
+import com.example.budget_budgie_opsc.databinding.ActivityCategoryDetailBinding
 import com.google.android.material.slider.Slider
 import java.text.NumberFormat
 import java.util.Locale
@@ -15,9 +17,15 @@ class CategoryDetailActivity : AppCompatActivity() {
     private var categoryName: String = ""
     private var total: Double = 0.0
 
+    private lateinit var binding: ActivityCategoryDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_category_detail)
+        binding = ActivityCategoryDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //setContentView(R.layout.activity_category_detail)
+
+        Rive.init(this)
 
         // Get category data from intent
         categoryId = intent.getIntExtra("CATEGORY_ID", -1)
@@ -33,6 +41,8 @@ class CategoryDetailActivity : AppCompatActivity() {
         slider.valueFrom = 0f
         slider.valueTo = total.toFloat()
         slider.value = total.toFloat()
+
+
 
         // Back button
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
