@@ -25,8 +25,8 @@ class login : AppCompatActivity() {
         setContentView(binding.root)
 
         //setContentView(R.layout.activity_login)
+
         //Rive Stuff
-        //Ivan Strings are in Values
         Rive.init(this)
         //binding.loginCharacter.controller.setBooleanState("Main", "isIdle", false) (Example of Swapping Conditions
 

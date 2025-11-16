@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     android:padding="24dp">
 
     <TextView
@@ -11,12 +12,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:text="Budget Budgie"
+        android:fontFamily="@font/quicksand_variable_font"
+        android:text="Budget\nBudgie"
         android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textSize="48sp"
+
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,12 +54,14 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etUsername"
-            android:layout_width="match_parent"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/budgie_dark_green"
             android:inputType="textPersonName|textNoSuggestions"
             android:maxLines="1"
             android:textColor="@android:color/white"
-            android:textColorHint="#80FFFFFF" />
+            android:textColorHint="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Password Input -->
@@ -81,8 +84,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
-            android:layout_width="match_parent"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/budgie_dark_green"
             android:inputType="textPassword|textNoSuggestions"
             android:maxLines="1"
             android:textColor="@android:color/white"
@@ -110,6 +115,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
+        android:backgroundTint="@color/budgie_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -121,6 +127,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegister"
+        android:backgroundTint="@color/budgie_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"

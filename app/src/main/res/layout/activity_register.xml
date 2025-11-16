@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     android:paddingTop="65dp">
 
     <TextView
@@ -11,9 +12,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Create Account"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/quicksand_variable_font"
+        android:text="CREATE ACCOUNT"
+        android:textColor="@color/budgie_dark_green"
+        android:textSize="34sp"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +34,14 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNewUsername"
-            android:layout_width="match_parent"
+            android:backgroundTint="@color/budgie_yellow"
+            android:layout_margin="2dp"
+            android:layout_width="400dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:inputType="textPersonName|textNoSuggestions"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/material_dynamic_primary100" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -52,14 +58,19 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNewPassword"
-            android:layout_width="match_parent"
+            android:backgroundTint="@color/budgie_yellow"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
             android:inputType="textPassword"
-            android:singleLine="true"/>
+            android:layout_margin="2dp"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCreateAccount"
+        android:backgroundTint="@color/budgie_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create"
@@ -70,6 +81,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnUpdateCredentials"
+        android:backgroundTint="@color/budgie_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Update Username/Password"
@@ -82,7 +94,7 @@
         android:id="@+id/ivan"
         android:layout_width="match_parent"
         android:layout_height="225dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnUpdateCredentials"
         app:riveResource="@raw/ivan_framed"

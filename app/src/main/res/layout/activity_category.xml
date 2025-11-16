@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     android:paddingTop="50dp">
 
     <!-- Burger Menu -->
@@ -29,25 +30,27 @@
         android:id="@+id/btnGoExpenses"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginStart="8dp"
         android:background="@android:color/transparent"
         android:contentDescription="Go to Expenses"
-        android:src="@android:drawable/ic_menu_view"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_expense_navbar_bold"
         app:layout_constraintStart_toEndOf="@id/btnMenuCategory"
-        android:layout_marginStart="8dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvCategoryTitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account Name"
+        android:fontFamily="@font/quicksand_variable_font"
         android:gravity="center"
-        android:textStyle="bold"
+        android:text="Account Name"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textStyle="bold"
         app:layout_constrainedWidth="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- First-time monthly budget form -->
     <ScrollView
@@ -67,10 +70,16 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSetMonthlyBudgetTitle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:backgroundTint="@color/budgie_blue"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:text="Set Monthly Budget Range"
-                app:cornerRadius="6dp"/>
+                android:textColor="@color/budgie_blue_dark"
+                android:textSize="22dp"
+                app:cornerRadius="32dp" />
 
             <!-- Minimum Budget -->
             <com.google.android.material.textfield.TextInputLayout
@@ -113,12 +122,14 @@
                 android:id="@+id/btnConfirmBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set Budget Range"
-                app:icon="@android:drawable/checkbox_on_background"
-                app:iconPadding="8dp"
-                app:iconGravity="textStart"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp"/>
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/budgie_blue"
+                android:text="Set Budget Range"
+                android:textColor="@color/budgie_blue_dark"
+                app:icon="@drawable/ic_profile_navbar"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
 
         </LinearLayout>
     </ScrollView>
@@ -161,6 +172,7 @@
             android:id="@+id/tvTotalAvailableLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_variable_font"
             android:text="TOTAL AVAILABLE"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tvTotalAvailable"

@@ -7,4 +7,9 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
+    <color name="budgie_yellow">#fce789</color>
+    <color name="budgie_blue">#b3d4d3</color>
+    <color name="budgie_blue_dark">#5a7877</color>
+    <color name="budgie_green">#b5d196</color>
+    <color name="budgie_dark_green">#3e4f2c</color>
 </resources>
