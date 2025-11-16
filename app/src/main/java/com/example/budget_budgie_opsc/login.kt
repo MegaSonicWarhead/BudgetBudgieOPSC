@@ -28,7 +28,7 @@ class login : AppCompatActivity() {
 
         //Rive Stuff
         Rive.init(this)
-        //binding.loginCharacter.controller.setBooleanState("Main", "isIdle", false) (Example of Swapping Conditions
+        //binding.loginCharacter.controller.setBooleanState("Main", "isHappy", true) (Example of Swapping Conditions)
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)

@@ -219,7 +219,15 @@ class GraphScreen : AppCompatActivity() {
             setBarHeight(barView, data.amount, maxValue)
             detailViews.first.text = data.categoryName
             detailViews.third.text = formatCurrency(data.amount)
-            detailViews.second.setImageResource(R.drawable.ic_green_up)
+
+
+            if(data.amount <= (minBudget/30)){
+                detailViews.second.setImageResource(R.drawable.ic_green_up)
+            }
+            else{
+                detailViews.second.setImageResource(R.drawable.ic_red_up)
+            }
+
         }
 
         for (i in visibleData.size until allBars.size) {
