@@ -4,18 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/cardview_light_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".addExpensesScreen">
 
     <Spinner
         android:id="@+id/spnrCategory"
+        style="@style/Widget.AppCompat.Spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:minHeight="48dp"
+        android:layout_margin="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/budgie_green"
+        android:minHeight="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="12dp"
+        android:fontFamily="@font/quicksand_variable_font"
+        android:textSize="15dp"
         android:text="Expense Description:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spnrCategory" />
@@ -45,6 +49,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/expense_edit_text"
+            android:fontFamily="@font/quicksand_variable_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences" />
@@ -55,8 +60,10 @@
         android:id="@+id/txtAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_variable_font"
         android:layout_marginStart="32dp"
         android:layout_marginTop="12dp"
+        android:textSize="15dp"
         android:text="Amount:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expense_input_layout" />
@@ -75,6 +82,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/amount_edit_text"
+            android:fontFamily="@font/quicksand_variable_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -86,6 +94,10 @@
         android:id="@+id/btnExpenseDate"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_variable_font"
+        android:backgroundTint="@color/budgie_dark_green"
+        android:textColor="@color/budgie_green"
+        android:textSize="18dp"
         android:text="Select Date"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/amount_input_layout"
@@ -117,9 +129,18 @@
                 android:backgroundTint="?attr/colorSurface"
                 android:padding="50dp"
                 android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_camera"
                 app:tint="?attr/colorPrimary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"/>
+
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/scan_receipt" />
 
             <ImageButton
                 android:id="@+id/btn_remove_image"
@@ -138,9 +159,13 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="230dp"
-        android:layout_height="75dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:fontFamily="@font/quicksand_variable_font"
+        android:backgroundTint="@color/budgie_dark_green"
+        android:textColor="@color/budgie_green"
+        android:textSize="18dp"
         android:text="Submit"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
@@ -153,6 +178,7 @@
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/budgie_green"
         android:layout_gravity="bottom"
         android:layout_weight="1"
         android:elevation="10dp"

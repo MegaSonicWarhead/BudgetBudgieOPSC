@@ -18,16 +18,18 @@
             android:id="@+id/txt_expense_name_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_variable_font"
+            style="bold"
             android:text="Expense Name"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"/>
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
         <!-- Date -->
         <TextView
             android:id="@+id/txt_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_variable_font"
             android:text="2025-10-03"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:layout_marginTop="4dp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -43,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="monospace"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:text="Amount" />
 
             <TextView
@@ -51,6 +53,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:text="Category"/>
         </LinearLayout>
 
@@ -61,7 +64,7 @@
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:layout_marginTop="8dp"
-            android:background="#E0E0E0"
+            android:background="@color/budgie_yellow"
             android:contentDescription="Receipt Image"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

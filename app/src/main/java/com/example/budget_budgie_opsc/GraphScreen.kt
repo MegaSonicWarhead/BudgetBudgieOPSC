@@ -222,10 +222,10 @@ class GraphScreen : AppCompatActivity() {
 
 
             if(data.amount <= (minBudget/30)){
-                detailViews.second.setImageResource(R.drawable.ic_green_up)
+                detailViews.second.setImageResource(R.drawable.happy_ivan)
             }
             else{
-                detailViews.second.setImageResource(R.drawable.ic_red_up)
+                detailViews.second.setImageResource(R.drawable.angry_ivan)
             }
 
         }

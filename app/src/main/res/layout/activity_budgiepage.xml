@@ -18,6 +18,7 @@
             android:layout_height="55dp"
             android:layout_marginHorizontal="25dp"
             android:layout_marginTop="55dp"
+            android:backgroundTint="@color/budgie_blue"
             android:background="@drawable/searchbar_background"
             android:paddingTop="10dp">
 
@@ -30,7 +31,7 @@
                     android:id="@+id/imageView6"
                     android:layout_width="55dp"
                     android:layout_height="42dp"
-                    app:srcCompat="?android:attr/textSelectHandleLeft" />
+                    app:srcCompat="@drawable/budgetbudgie_noback" />
 
                 <TextView
                     android:id="@+id/monthlyBudgetTitle"
@@ -38,24 +39,20 @@
                     android:layout_height="36dp"
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginVertical="5dp"
-                    android:fontFamily="monospace"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:text="@string/monthly_budget"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="16sp"
-                    android:typeface="normal" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/monthlyBudget_Amount"
                     android:layout_width="161dp"
                     android:layout_height="36dp"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginVertical="5dp"
                     android:layout_marginEnd="15dp"
                     android:layout_weight="1"
-                    android:fontFamily="monospace"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
                     android:text="00000"
                     android:textAlignment="textEnd" />
 
@@ -111,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginHorizontal="50dp"
+            android:backgroundTint="@color/budgie_blue"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="25dp"
             android:background="@drawable/searchbar_background"
@@ -125,17 +123,16 @@
                     android:id="@+id/imageView10"
                     android:layout_width="55dp"
                     android:layout_height="42dp"
-                    app:srcCompat="?android:attr/textSelectHandleLeft" />
+                    app:srcCompat="@drawable/budgetbudgie_noback" />
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="31dp"
                     android:layout_weight="1"
-                    android:fontFamily="monospace"
                     android:paddingVertical="6dp"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:text="POINTS"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textSize="16sp" />
 
                 <TextView
@@ -145,6 +142,7 @@
                     android:layout_marginEnd="15dp"
                     android:layout_weight="1"
                     android:paddingVertical="6dp"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:text="0000"
                     android:textAlignment="textEnd" />
             </LinearLayout>
@@ -156,15 +154,22 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/budgie_green"
         android:layout_gravity="bottom"
         android:layout_weight="1"
-        android:elevation="5dp"
+        android:elevation="10dp"
         android:hapticFeedbackEnabled="true"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
         app:itemGravity="center"
         app:itemIconSize="24dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         app:menu="@menu/menu_bottom_navbar">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
