@@ -3,7 +3,7 @@ package com.example.budget_budgie_opsc
 import com.example.budget_budgie_opsc.R
 
 object AppData{
-    public var currentOutfit = R.raw.ivan_framed;
+    var currentOutfit = R.raw.ivan_framed;
 
     val GlobalOutfitAvailable: MutableMap<String, Boolean> = mutableMapOf(
         "Plain Ivan" to false,
