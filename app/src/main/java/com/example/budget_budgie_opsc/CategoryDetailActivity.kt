@@ -2,22 +2,27 @@ package com.example.budget_budgie_opsc
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import app.rive.runtime.kotlin.core.Rive
 import com.example.budget_budgie_opsc.databinding.ActivityCategoryDetailBinding
-import com.google.android.material.slider.Slider
 import java.text.NumberFormat
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CategoryDetailActivity : AppCompatActivity() {
 
-    private var categoryId: Int = -1
+    private var categoryId: String = ""
     private var categoryName: String = ""
-    private var total: Double = 0.0
+    private var categoryTotal: Double = 0.0
+    private var accountId: String = ""
+    private var userId: String = ""
 
     private lateinit var binding: ActivityCategoryDetailBinding
+    private val currencyFormatter: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,34 +33,75 @@ class CategoryDetailActivity : AppCompatActivity() {
         Rive.init(this)
 
         // Get category data from intent
-        categoryId = intent.getIntExtra("CATEGORY_ID", -1)
+        categoryId = intent.getStringExtra("CATEGORY_ID") ?: ""
         categoryName = intent.getStringExtra("CATEGORY_NAME") ?: "Category"
-        total = intent.getDoubleExtra("CATEGORY_TOTAL", 0.0)
+        categoryTotal = intent.getDoubleExtra("CATEGORY_TOTAL", 0.0)
+        accountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
+        userId = intent.getStringExtra("USER_ID") ?: ""
+
+        if (categoryId.isEmpty() || accountId.isEmpty() || userId.isEmpty()) {
+            Toast.makeText(this, "Missing category information", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         // Set UI
-        findViewById<TextView>(R.id.tvCategoryNameDetail).text = categoryName
-        val fmt = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
-        findViewById<TextView>(R.id.tvTotalAmount).text = fmt.format(total)
-
-        val slider = findViewById<Slider>(R.id.sliderDetail)
-        slider.valueFrom = 0f
-        slider.valueTo = total.toFloat()
-        slider.value = total.toFloat()
-
-
+        binding.tvCategoryNameDetail.text = categoryName
+        binding.tvTotalAmount.text = currencyFormatter.format(categoryTotal)
+        binding.sliderDetail.apply {
+            valueFrom = 0f
+            valueTo = categoryTotal.toFloat().coerceAtLeast(1f)
+            value = valueTo
+            isEnabled = false
+        }
+        binding.tvCurrentAvailable.text = getString(
+            R.string.category_remaining_amount,
+            currencyFormatter.format(categoryTotal)
+        )
 
         // Back button
-        findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
+        binding.btnBack.setOnClickListener { finish() }
 
         // Category Settings button
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCategorySettings)
+        binding.btnCategorySettings
             .setOnClickListener {
                 val intent = Intent(this, CategorySettingsActivity::class.java).apply {
                     putExtra("CATEGORY_ID", categoryId)
                     putExtra("CATEGORY_NAME", categoryName)
-                    putExtra("CATEGORY_TOTAL", total)
+                    putExtra("CATEGORY_TOTAL", categoryTotal)
+                    putExtra("ACCOUNT_ID", accountId)
+                    putExtra("USER_ID", userId)
                 }
                 startActivity(intent)
             }
+
+        loadCategoryUsage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadCategoryUsage()
+    }
+
+    private fun loadCategoryUsage() {
+        lifecycleScope.launch {
+            val totalSpent = withContext(Dispatchers.IO) {
+                FirebaseServiceManager.expenseService
+                    .getExpensesByCategory(userId, accountId, categoryId)
+                    .sumOf { it.amount }
+            }
+
+            val remaining = (categoryTotal - totalSpent).coerceAtLeast(0.0)
+
+            binding.sliderDetail.apply {
+                valueTo = categoryTotal.toFloat().coerceAtLeast(1f)
+                value = remaining.toFloat().coerceIn(valueFrom, valueTo)
+            }
+
+            binding.tvCurrentAvailable.text = getString(
+                R.string.category_remaining_amount,
+                currencyFormatter.format(remaining)
+            )
+        }
     }
 }

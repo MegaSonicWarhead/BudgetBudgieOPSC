@@ -24,4 +24,5 @@
     <string name="ivanIsUnhappy">isUnhappy</string>
     <string name="ivanIsIdle">isIdle</string>
     <string name="ivanIsHappy">isHappy</string>
+    <string name="category_remaining_amount">Remaining balance: %1$s</string>
 </resources>

@@ -23,19 +23,19 @@
             android:fontFamily="@font/quicksand_variable_font"
             android:textStyle="bold"/>
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/sliderAvailable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:valueFrom="0.0"
-            android:valueTo="100.0"
-            app:thumbColor="@color/budgie_dark_green"
-            app:tickColorActive="@color/budgie_dark_green"
-            app:tickColorInactive="@color/budgie_dark_green"
-            app:trackColorActive="@color/budgie_dark_green"
-            app:trackColorInactive="@color/budgie_green"
-            app:labelBehavior="gone"/>
+<!--        <com.google.android.material.slider.Slider-->
+<!--            android:id="@+id/sliderAvailable"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:valueFrom="0.0"-->
+<!--            android:valueTo="100.0"-->
+<!--            app:thumbColor="@color/budgie_dark_green"-->
+<!--            app:tickColorActive="@color/budgie_dark_green"-->
+<!--            app:tickColorInactive="@color/budgie_dark_green"-->
+<!--            app:trackColorActive="@color/budgie_dark_green"-->
+<!--            app:trackColorInactive="@color/budgie_green"-->
+<!--            app:labelBehavior="gone"/>-->
 
         <TextView
             android:id="@+id/tvAmountAvailable"
