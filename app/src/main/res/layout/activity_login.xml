@@ -11,7 +11,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/quicksand_variable_font"
         android:text="Budget\nBudgie"
         android:textAlignment="center"
@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tilUsername"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-        app:riveResource="@raw/ivan_framed"
+        app:riveResource="@raw/ivan_with_plain_glasses"
         app:riveStateMachine="Main" />
 
     <!-- Username Input -->

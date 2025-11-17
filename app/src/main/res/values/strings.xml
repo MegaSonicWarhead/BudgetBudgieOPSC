@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Budget-Budgie-OPSC</string>
+    <string name="app_name">Budget Budgie</string>
     <string name="title_activity_login">login</string>
     <string name="title_activity_account">activity_account</string>
     <string name="title_activity_category">activity_category</string>
