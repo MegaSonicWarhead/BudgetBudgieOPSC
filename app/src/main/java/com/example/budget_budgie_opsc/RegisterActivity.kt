@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.Rive
 import com.example.budget_budgie_opsc.databinding.ActivityRegisterBinding
 import kotlinx.coroutines.launch
@@ -21,6 +22,8 @@ class RegisterActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_register)
 
         Rive.init(this)
+//        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
+//        ivan.setRiveResource(AppData.currentOutfit)
         binding.ivan.controller.setBooleanState("Main", "isHappy", true)        //isHappy that someone is making an account
 
         val etNewUsername = findViewById<EditText>(R.id.etNewUsername)

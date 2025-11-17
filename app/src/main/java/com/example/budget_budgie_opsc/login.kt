@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.Rive
 import com.example.budget_budgie_opsc.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
@@ -28,6 +29,8 @@ class login : AppCompatActivity() {
 
         //Rive Stuff
         Rive.init(this)
+//        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
+//        ivan.setRiveResource(AppData.currentOutfit)
         //binding.loginCharacter.controller.setBooleanState("Main", "isHappy", true) (Example of Swapping Conditions)
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
