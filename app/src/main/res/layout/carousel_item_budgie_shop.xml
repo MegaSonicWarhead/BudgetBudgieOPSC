@@ -60,7 +60,7 @@
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
                 android:contentDescription="@string/points_icon"
-                app:srcCompat="@drawable/ic_points_icon" /> <!-- You need a points icon -->
+                app:srcCompat="@drawable/currency_feather" /> <!-- You need a points icon -->
 
         </LinearLayout>
 
