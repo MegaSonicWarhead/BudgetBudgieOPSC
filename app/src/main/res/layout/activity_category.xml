@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/quicksand_variable_font"
         android:gravity="center"
-        android:text="Account Name"
+        android:text="CATEGORIES"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textStyle="bold"
@@ -58,19 +58,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- First-time monthly budget form -->
+
+    <!-- Normal list state -->
     <ScrollView
         android:id="@+id/budgetFormContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="16dp">
 
             <com.google.android.material.button.MaterialButton
@@ -92,8 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:endIconMode="custom"
                 app:endIconDrawable="@android:drawable/ic_menu_edit"
+                app:endIconMode="custom"
                 app:helperText="Minimum monthly budget">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -111,8 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:endIconMode="custom"
                 app:endIconDrawable="@android:drawable/ic_menu_edit"
+                app:endIconMode="custom"
                 app:helperText="Maximum monthly budget">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -120,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Maximum Budget"
-                    android:inputType="numberDecimal"/>
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -139,7 +143,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Normal list state -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRecyclerView"
         android:layout_width="0dp"
@@ -154,13 +157,17 @@
         android:id="@+id/fabAddCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:src="@android:drawable/ic_input_add"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/budgie_green"
+        android:foregroundTint="@color/budgie_green"
+        android:src="@drawable/flat_add_icon"
+        android:tint="@color/budgie_green"
+        android:tintMode="multiply"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/netFooterCategory"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:maxImageSize="45dp" />
 
     <!-- Footer total available -->
     <androidx.constraintlayout.widget.ConstraintLayout

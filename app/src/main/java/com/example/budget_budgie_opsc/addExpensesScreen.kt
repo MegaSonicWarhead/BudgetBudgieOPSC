@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 import android.content.Intent
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class addExpensesScreen : AppCompatActivity() {
@@ -31,6 +32,7 @@ class addExpensesScreen : AppCompatActivity() {
     private lateinit var addImageButton: ImageButton
     private lateinit var removeImageButton: ImageButton
     private lateinit var dateButton: Button
+    private lateinit var lottieAnim: LottieAnimationView
 
     private var currentUserId: String = ""
     private var selectedAccountId: String = ""
@@ -80,6 +82,8 @@ class addExpensesScreen : AppCompatActivity() {
         addImageButton = findViewById(R.id.btn_add_image)
         removeImageButton = findViewById(R.id.btn_remove_image)
         dateButton = findViewById(R.id.btnExpenseDate)
+        lottieAnim = findViewById(R.id.lottie_anime)
+
 
         loadCategories()
 
@@ -185,6 +189,7 @@ class addExpensesScreen : AppCompatActivity() {
             if (bitmap != null) {
                 addImageButton.setImageBitmap(bitmap)
                 removeImageButton.visibility = View.VISIBLE
+                lottieAnim.visibility = View.INVISIBLE
                 Log.i(TAG, "Image loaded successfully from URI.")
             } else {
                 Log.w(TAG, "Manual decode failed — trying Coil fallback.")
@@ -266,9 +271,10 @@ class addExpensesScreen : AppCompatActivity() {
     // Remove selected image
     private fun clearSelectedImage() {
         selectedImageUri = null
-        addImageButton.setImageResource(android.R.drawable.ic_input_add)
+        addImageButton.setImageResource(0)
         addImageButton.imageTintList = null
         removeImageButton.visibility = View.GONE
+        lottieAnim.visibility = View.VISIBLE
     }
 
     // Date picker
