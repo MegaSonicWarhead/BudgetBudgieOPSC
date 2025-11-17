@@ -17,15 +17,15 @@ class CategoryAdapter(
     inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.tvCategoryName)
         val amountAvailable: TextView = view.findViewById(R.id.tvAmountAvailable)
-        val slider: Slider = view.findViewById(R.id.sliderAvailable)
+        //val slider: Slider = view.findViewById(R.id.sliderAvailable)
 
         fun bind(category: Category) {
             name.text = category.name
 
-            slider.valueFrom = 0f
+            //slider.valueFrom = 0f
             val budgetAsFloat = category.allocatedAmount.toFloat()  // updated
-            slider.valueTo = if (budgetAsFloat > 0f) budgetAsFloat else 1f
-            slider.value = if (budgetAsFloat > 0f) budgetAsFloat else 0f
+            //slider.valueTo = if (budgetAsFloat > 0f) budgetAsFloat else 1f
+            //slider.value = if (budgetAsFloat > 0f) budgetAsFloat else 0f
 
             val fmt = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
             amountAvailable.text = fmt.format(category.allocatedAmount)  // updated
