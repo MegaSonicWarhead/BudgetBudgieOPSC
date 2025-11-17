@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.Rive
 import com.example.budget_budgie_opsc.databinding.ActivityCategoryDetailBinding
 import java.text.NumberFormat
@@ -31,6 +32,8 @@ class CategoryDetailActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_category_detail)
 
         Rive.init(this)
+        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
+        ivan.setRiveResource(AppData.currentOutfit)
 
 
         // Get category data from intent
@@ -55,6 +58,7 @@ class CategoryDetailActivity : AppCompatActivity() {
             value = valueTo
             isEnabled = false
         }
+
         binding.tvCurrentAvailable.text = getString(
             R.string.category_remaining_amount,
             currencyFormatter.format(categoryTotal)
@@ -94,6 +98,8 @@ class CategoryDetailActivity : AppCompatActivity() {
 
             val remaining = (categoryTotal - totalSpent).coerceAtLeast(0.0)
 
+            callIvan(remaining, categoryTotal)
+
             binding.sliderDetail.apply {
                 valueTo = categoryTotal.toFloat().coerceAtLeast(1f)
                 value = remaining.toFloat().coerceIn(valueFrom, valueTo)
@@ -103,6 +109,27 @@ class CategoryDetailActivity : AppCompatActivity() {
                 R.string.category_remaining_amount,
                 currencyFormatter.format(remaining)
             )
+        }
+    }
+
+
+    private fun callIvan(moneyAvailable: Double, categoryTotal: Double) {
+        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
+
+        if(moneyAvailable >= (categoryTotal/2)){
+            binding.ivan.controller.setBooleanState("Main", "isHappy", true)
+        }
+        else if(moneyAvailable > (categoryTotal/4) && moneyAvailable < (categoryTotal/2)){
+            binding.ivan.controller.setBooleanState("Main", "isHappy", false)
+            binding.ivan.controller.setBooleanState("Main", "isIdle", true)
+            binding.ivan.controller.setBooleanState("Main", "isIdle", false)
+            binding.ivan.controller.setBooleanState("Main", "isUnhappy", true)
+        }
+        else if(moneyAvailable < (categoryTotal/4)){
+            binding.ivan.controller.setBooleanState("Main", "isUnhappy", false)
+            binding.ivan.controller.setBooleanState("Main", "isIdle", true)
+            binding.ivan.controller.setBooleanState("Main", "isIdle", false)
+            binding.ivan.controller.setBooleanState("Main", "isAngry", true)
         }
     }
 }

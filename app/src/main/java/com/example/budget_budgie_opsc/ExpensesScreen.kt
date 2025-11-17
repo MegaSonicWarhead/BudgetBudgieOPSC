@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.Rive
 import com.example.budget_budgie_opsc.databinding.ActivityExpensesScreenBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,6 +26,9 @@ class ExpensesScreen : AppCompatActivity() {
         //setContentView(R.layout.activity_expenses_screen)
 
         //Rive
+        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
+        ivan.setRiveResource(AppData.currentOutfit)
+        binding.ivan.controller.setBooleanState("Main", "isUnhappy", true)
         Rive.init(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

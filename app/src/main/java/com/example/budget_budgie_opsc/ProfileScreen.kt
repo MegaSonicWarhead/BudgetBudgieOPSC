@@ -8,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.rive.runtime.kotlin.RiveAnimationView
+import app.rive.runtime.kotlin.core.Rive
+import com.example.budget_budgie_opsc.databinding.ActivityBudgiepageBinding
+import com.example.budget_budgie_opsc.databinding.ActivityLoginBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,9 +28,17 @@ class ProfileScreen : AppCompatActivity() {
     private lateinit var shopAdapter: BudgieShopAdapter
     private var userPoints: Int = 0
 
+    private lateinit var binding : ActivityBudgiepageBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_budgiepage)
+        binding = ActivityBudgiepageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        //setContentView(R.layout.activity_budgiepage)
+
+        Rive.init(this)
+//        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
+//        ivan.setRiveResource(AppData.currentOutfit)
 
         currentUserId = intent.getStringExtra("USER_ID") ?: ""
         selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
@@ -43,7 +55,7 @@ class ProfileScreen : AppCompatActivity() {
             ShopItem("Ball & Chain", 100, R.drawable.ic_big_ball),
             ShopItem("Glasses", 75, R.drawable.ic_glasses),
             ShopItem("Winky Glasses", 120, R.drawable.ic_glasses2),
-            ShopItem("Knife Fight Memorabilia", 80, R.drawable.ic_mother_russia),
+            ShopItem("Mother Russia", 80, R.drawable.ic_mother_russia),
             ShopItem("Cool Glasses", 50, R.drawable.ic_lightningglasses)
             // TODO: local DB
         )
@@ -61,6 +73,15 @@ class ProfileScreen : AppCompatActivity() {
         //Check if the item is already owned
         if (item.isPurchased) {
             Toast.makeText(this, "You already own this item!", Toast.LENGTH_SHORT).show()
+            //Change Ivan's Outfit
+            val newIvanResource = AppData.GlobalIvanOutfits[item.title]
+            val ivan = findViewById<RiveAnimationView>(R.id.loginCharacter)
+            if(newIvanResource != null){
+                ivan.setRiveResource(newIvanResource)
+                AppData.currentOutfit = newIvanResource
+            }
+            AppData.GlobalOutfitAvailable[item.title] = true
+
             return
         }
 
