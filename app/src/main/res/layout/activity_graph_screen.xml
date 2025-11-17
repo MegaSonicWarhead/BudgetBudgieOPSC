@@ -2,340 +2,362 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cardview_light_background"
     tools:context=".GraphScreen">
 
-    <Button
-        android:id="@+id/btnStartDate"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/budgie_dark_green"
-        android:fontFamily="@font/quicksand_variable_font"
-        android:text="Start Date"
-        android:textColor="@color/budgie_green"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/graph_ceiling_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/btnEndDate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnEndDate"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/budgie_dark_green"
-        android:fontFamily="@font/quicksand_variable_font"
-        android:textColor="@color/budgie_green"
-        android:textStyle="bold"
-        android:text="End Date"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnStartDate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnStartDate" />
-
-
-    <!-- Guideline for the floor of the labels -->
-    <Button
-        android:id="@+id/btnApplyFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/budgie_dark_green"
-        android:fontFamily="@font/quicksand_variable_font"
-        android:gravity="center"
-        android:text="Apply"
-        android:textColor="@color/budgie_green"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartDate" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/graph_floor_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="350dp" />
-
-    <!-- Guideline for the TOP of the graph bar area -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/graph_ceiling_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="200dp" />
-
-    <!-- Guideline for the BASE of the bars (top of the labels) -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bar_base_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="350dp" />
-
-
-    <!-- Measurement Labels -->
-    <TextView
-        android:id="@+id/text_max_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:text="150"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintEnd_toStartOf="@+id/bar1"
-        app:layout_constraintTop_toBottomOf="@+id/btnApplyFilter" />
-
-
-    <TextView
-        android:id="@+id/text_zero_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintBottom_toBottomOf="@+id/bar_base_guideline"
-        app:layout_constraintEnd_toEndOf="@+id/text_max_value" />
-
-    <TextView
-        android:id="@+id/text_mid_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="75"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintBottom_toTopOf="@+id/text_zero_value"
-        app:layout_constraintEnd_toEndOf="@+id/text_max_value"
-        app:layout_constraintTop_toTopOf="@+id/text_max_value" />
-
-    <!-- Bar 1 Elements -->
-    <View
-        android:id="@+id/bar1"
-        android:layout_width="40dp"
-        android:layout_height="100dp"
-        android:background="#4CAF50"
-        app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/bar2"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/bar1_category_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Category 1"
-        android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintEnd_toEndOf="@+id/bar1"
-        app:layout_constraintStart_toStartOf="@+id/bar1"
-        app:layout_constraintTop_toBottomOf="@+id/bar1" />
-
-    <ImageView
-        android:id="@+id/bar1_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintEnd_toEndOf="@+id/bar1"
-        app:layout_constraintStart_toStartOf="@+id/bar1"
-        app:layout_constraintTop_toBottomOf="@+id/bar1_category_name" />
-
-    <TextView
-        android:id="@+id/bar1_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="100"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintEnd_toEndOf="@+id/bar1"
-        app:layout_constraintStart_toStartOf="@+id/bar1"
-        app:layout_constraintTop_toBottomOf="@+id/bar1_icon" />
-
-
-    <!-- Bar 2 Elements -->
-    <View
-        android:id="@+id/bar2"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:background="#2196F3"
-        app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/bar3"
-        app:layout_constraintStart_toEndOf="@+id/bar1" />
-
-    <TextView
-        android:id="@+id/bar2_category_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Category 2"
-        android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintEnd_toEndOf="@+id/bar2"
-        app:layout_constraintStart_toStartOf="@+id/bar2"
-        app:layout_constraintTop_toBottomOf="@+id/bar2" />
-
-    <ImageView
-        android:id="@+id/bar2_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintEnd_toEndOf="@+id/bar2"
-        app:layout_constraintStart_toStartOf="@+id/bar2"
-        app:layout_constraintTop_toBottomOf="@+id/bar2_category_name" />
-
-    <TextView
-        android:id="@+id/bar2_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="100"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintEnd_toEndOf="@+id/bar2"
-        app:layout_constraintStart_toStartOf="@+id/bar2"
-        app:layout_constraintTop_toBottomOf="@+id/bar2_icon" />
-
-
-    <!-- Bar 3 Elements -->
-    <View
-        android:id="@+id/bar3"
-        android:layout_width="40dp"
-        android:layout_height="150dp"
-        android:background="#F44336"
-        app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/bar2" />
-
-    <TextView
-        android:id="@+id/bar3_category_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Category 3"
-        android:textAppearance="?attr/textAppearanceBody2"
-        app:layout_constraintEnd_toEndOf="@+id/bar3"
-        app:layout_constraintStart_toStartOf="@+id/bar3"
-        app:layout_constraintTop_toBottomOf="@+id/bar3" />
-
-    <ImageView
-        android:id="@+id/bar3_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintEnd_toEndOf="@+id/bar3"
-        app:layout_constraintStart_toStartOf="@+id/bar3"
-        app:layout_constraintTop_toBottomOf="@+id/bar3_category_name" />
-
-    <TextView
-        android:id="@+id/bar3_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="100"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:layout_constraintEnd_toEndOf="@+id/bar3"
-        app:layout_constraintStart_toStartOf="@+id/bar3"
-        app:layout_constraintTop_toBottomOf="@+id/bar3_icon" />
-
-    <TextView
-        android:id="@+id/tvBudgetInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textSize="18sp"
-        android:fontFamily="@font/quicksand_variable_font"
-        android:text="Budget info"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_previous" />
-
-    <TextView
-        android:id="@+id/tvDailyRecommendation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textSize="18sp"
-        android:fontFamily="@font/quicksand_variable_font"
-        android:text="Daily recommendation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBudgetInfo" />
-
-    <TextView
-        android:id="@+id/tvDailyPoints"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/quicksand_variable_font"
-        android:text="Daily points"
-        android:textSize="18sp"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDailyRecommendation" />
-
-    <ImageButton
-        android:id="@+id/button_previous"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/button_outline"
-        android:contentDescription="Previous"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bar1_value"
-        app:tint="@color/black" />
-
-    <ImageButton
-        android:id="@+id/button_next"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/button_outline"
-        android:contentDescription="Next"
-        android:src="@drawable/ic_arrow_forward"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button_previous"
-        app:tint="@color/black" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/budgie_green"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:elevation="10dp"
-        android:hapticFeedbackEnabled="true"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
         app:itemGravity="center"
         app:itemIconSize="24dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:menu="@menu/menu_bottom_navbar">
+        app:menu="@menu/menu_bottom_navbar" />
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- ALL YOUR ORIGINAL VIEWS (BUTTONS, BARS, TEXTVIEWS) ARE HERE, UNCHANGED. -->
+            <!-- They will now scroll correctly. -->
+
+            <Button
+                android:id="@+id/btnStartDate"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:text="Start Date"
+                android:textColor="@color/budgie_green"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btnEndDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnEndDate"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:text="End Date"
+                android:textColor="@color/budgie_green"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/btnStartDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnStartDate" />
+
+            <TextView
+                android:id="@+id/tvStartDateDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:text="Not Set"
+                android:textColor="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="@+id/btnStartDate"
+                app:layout_constraintStart_toStartOf="@+id/btnStartDate"
+                app:layout_constraintTop_toBottomOf="@+id/btnStartDate" />
+
+            <TextView
+                android:id="@+id/tvEndDateDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:text="Not Set"
+                android:textColor="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="@+id/btnEndDate"
+                app:layout_constraintStart_toStartOf="@+id/btnEndDate"
+                app:layout_constraintTop_toBottomOf="@+id/btnEndDate" />
+
+            <Button
+                android:id="@+id/btnApplyFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:gravity="center"
+                android:text="Apply"
+                android:textColor="@color/budgie_green"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStartDateDisplay" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/graph_content_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:constraint_referenced_ids="
+        bar1, bar1_category_name, bar1_icon, bar1_value,
+        bar2, bar2_category_name, bar2_icon, bar2_value,
+        bar3, bar3_category_name, bar3_icon, bar3_value,
+        text_max_value, text_mid_value, text_zero_value,
+        button_previous, button_next
+        " />
+        " />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/bar_base_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="350dp" />
+
+            <TextView
+                android:id="@+id/text_max_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:text="150"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintEnd_toStartOf="@+id/bar1"
+                app:layout_constraintTop_toBottomOf="@+id/btnApplyFilter" />
+
+
+
+            <TextView
+                android:id="@+id/text_zero_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintBottom_toBottomOf="@+id/bar_base_guideline"
+                app:layout_constraintEnd_toEndOf="@+id/text_max_value" />
+
+            <TextView
+                android:id="@+id/text_mid_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="75"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintBottom_toTopOf="@+id/text_zero_value"
+                app:layout_constraintEnd_toEndOf="@+id/text_max_value"
+                app:layout_constraintTop_toTopOf="@+id/text_max_value" />
+
+            <View
+                android:id="@+id/bar1"
+                android:layout_width="40dp"
+                android:layout_height="100dp"
+                android:background="#4CAF50"
+                app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/bar2"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/bar1_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Category 1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintEnd_toEndOf="@+id/bar1"
+                app:layout_constraintStart_toStartOf="@+id/bar1"
+                app:layout_constraintTop_toBottomOf="@+id/bar1" />
+
+            <ImageView
+                android:id="@+id/bar1_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintEnd_toEndOf="@+id/bar1"
+                app:layout_constraintStart_toStartOf="@+id/bar1"
+                app:layout_constraintTop_toBottomOf="@+id/bar1_category_name" />
+
+            <TextView
+                android:id="@+id/bar1_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="100"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintEnd_toEndOf="@+id/bar1"
+                app:layout_constraintStart_toStartOf="@+id/bar1"
+                app:layout_constraintTop_toBottomOf="@+id/bar1_icon" />
+
+            <View
+                android:id="@+id/bar2"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:background="#2196F3"
+                app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/bar3"
+                app:layout_constraintStart_toEndOf="@+id/bar1" />
+
+            <TextView
+                android:id="@+id/bar2_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Category 2"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintEnd_toEndOf="@+id/bar2"
+                app:layout_constraintStart_toStartOf="@+id/bar2"
+                app:layout_constraintTop_toBottomOf="@+id/bar2" />
+
+            <ImageView
+                android:id="@+id/bar2_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintEnd_toEndOf="@+id/bar2"
+                app:layout_constraintStart_toStartOf="@+id/bar2"
+                app:layout_constraintTop_toBottomOf="@+id/bar2_category_name" />
+
+            <TextView
+                android:id="@+id/bar2_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="100"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintEnd_toEndOf="@+id/bar2"
+                app:layout_constraintStart_toStartOf="@+id/bar2"
+                app:layout_constraintTop_toBottomOf="@+id/bar2_icon" />
+
+            <View
+                android:id="@+id/bar3"
+                android:layout_width="40dp"
+                android:layout_height="150dp"
+                android:background="#F44336"
+                app:layout_constraintBottom_toTopOf="@+id/bar_base_guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/bar2" />
+
+            <TextView
+                android:id="@+id/bar3_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Category 3"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintEnd_toEndOf="@+id/bar3"
+                app:layout_constraintStart_toStartOf="@+id/bar3"
+                app:layout_constraintTop_toBottomOf="@+id/bar3" />
+
+            <ImageView
+                android:id="@+id/bar3_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintEnd_toEndOf="@+id/bar3"
+                app:layout_constraintStart_toStartOf="@+id/bar3"
+                app:layout_constraintTop_toBottomOf="@+id/bar3_category_name" />
+
+            <TextView
+                android:id="@+id/bar3_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="100"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintEnd_toEndOf="@+id/bar3"
+                app:layout_constraintStart_toStartOf="@+id/bar3"
+                app:layout_constraintTop_toBottomOf="@+id/bar3_icon" />
+
+            <ImageButton
+                android:id="@+id/button_previous"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/button_outline"
+                android:contentDescription="Previous"
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bar1_value"
+                app:tint="@color/black" />
+
+            <ImageButton
+                android:id="@+id/button_next"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/button_outline"
+                android:contentDescription="Next"
+                android:src="@drawable/ic_arrow_forward"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_previous"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/tvBudgetInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:text="Budget info"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_previous" />
+
+            <TextView
+                android:id="@+id/tvDailyRecommendation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:text="Daily recommendation"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvBudgetInfo" />
+
+            <TextView
+                android:id="@+id/tvDailyPoints"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/quicksand_variable_font"
+                android:paddingBottom="16dp"
+                android:text="Daily points"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDailyRecommendation" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Group
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -66,6 +67,10 @@ class GraphScreen : AppCompatActivity() {
     private lateinit var tvBudgetInfo: TextView
     private lateinit var tvDailyRecommendation: TextView
     private lateinit var tvDailyPoints: TextView
+    private lateinit var graphContentGroup: Group
+
+    private lateinit var tvStartDateDisplay: TextView
+    private lateinit var tvEndDateDisplay: TextView
 
     // --- State Management Properties ---
     private lateinit var allBarData: List<BarData>
@@ -144,6 +149,9 @@ class GraphScreen : AppCompatActivity() {
         startDateButton = findViewById(R.id.btnStartDate)
         endDateButton = findViewById(R.id.btnEndDate)
         applyFilterButton = findViewById(R.id.btnApplyFilter)
+
+        tvStartDateDisplay = findViewById(R.id.tvStartDateDisplay)
+        tvEndDateDisplay = findViewById(R.id.tvEndDateDisplay)
 
         // Bars
         bar1 = findViewById(R.id.bar1)
@@ -293,6 +301,12 @@ class GraphScreen : AppCompatActivity() {
     private fun updateDateLabels() {
         startDateButton.text = formatDate(startDateMillis)
         endDateButton.text = formatDate(endDateMillis)
+
+        tvStartDateDisplay.text = formatDate(startDateMillis)
+        tvEndDateDisplay.text = formatDate(endDateMillis)
+
+        startDateButton.text = "Start Date"
+        endDateButton.text = "End Date"
     }
 
     private fun formatDate(timestamp: Long): String {
