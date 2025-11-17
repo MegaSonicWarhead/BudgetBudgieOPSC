@@ -46,6 +46,7 @@ class activity_category : AppCompatActivity() {
                     putExtra("CATEGORY_ID", category.id)
                     putExtra("CATEGORY_NAME", category.name)
                     putExtra("CATEGORY_TOTAL", category.allocatedAmount)
+                    putExtra("ACCOUNT_ID", accountId)
                     putExtra("USER_ID", currentUserId)
                 }
             } else {
@@ -53,6 +54,7 @@ class activity_category : AppCompatActivity() {
                     putExtra("CATEGORY_ID", category.id)
                     putExtra("CATEGORY_NAME", category.name)
                     putExtra("CATEGORY_TOTAL", category.allocatedAmount)
+                    putExtra("ACCOUNT_ID", accountId)
                     putExtra("USER_ID", currentUserId)
                 }
             }
