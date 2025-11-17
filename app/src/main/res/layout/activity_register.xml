@@ -34,13 +34,13 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNewUsername"
-            android:layout_margin="2dp"
             android:layout_width="400dp"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
             android:inputType="textPersonName|textNoSuggestions"
             android:singleLine="true"
-            android:textColor="@color/material_dynamic_primary100" />
+            android:textColor="@color/material_dynamic_primary0" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="sans-serif"
+            android:textColor="@color/black"
             android:inputType="textPassword"
             android:layout_margin="2dp"
             android:singleLine="true" />

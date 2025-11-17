@@ -32,6 +32,7 @@ class CategoryDetailActivity : AppCompatActivity() {
 
         Rive.init(this)
 
+
         // Get category data from intent
         categoryId = intent.getStringExtra("CATEGORY_ID") ?: ""
         categoryName = intent.getStringExtra("CATEGORY_NAME") ?: "Category"

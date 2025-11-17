@@ -48,7 +48,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="No Account Selected"
-        android:textSize="15dp"
+        android:textSize="20dp"
         android:fontFamily="@font/quicksand_variable_font"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/tvTitleAccounts"
@@ -64,7 +64,7 @@
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         android:padding="12dp"
-        android:background="#F1EEEE"
+        android:background="@color/cardview_light_background"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Budget Settings"
+            android:fontFamily="@font/quicksand_variable_font"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
@@ -105,6 +107,9 @@
             android:id="@+id/btnUpdateBudgets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/budgie_dark_green"
+            android:textColor="@color/budgie_green"
+            android:textSize="14sp"
             android:text="Update Budgets"
             android:layout_marginTop="8dp" />
     </LinearLayout>
@@ -132,10 +137,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="4dp"
         android:backgroundTint="@color/budgie_dark_green"
         app:layout_constraintBottom_toTopOf="@+id/netFooterGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.949"
         app:layout_constraintStart_toStartOf="parent"
         app:maxImageSize="50dp"
         app:srcCompat="@drawable/flat_add_icon"
@@ -153,15 +159,19 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
+        style="?attr/floatingActionButtonLargeStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="@color/budgie_dark_green"
+        app:layout_constraintBottom_toTopOf="@+id/netFooterGroup"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.949"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:maxImageSize="50dp"
+        app:srcCompat="@drawable/flat_add_icon"
+        app:tint="@color/budgie_green"/>
 
     <!-- Net total footer -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -218,6 +228,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:text="Checking / Savings / Cash"
                 android:background="#E6E2E2"
                 android:padding="8dp"
@@ -235,6 +246,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:hint="Name" />
 
                 <EditText
@@ -243,6 +255,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:hint="Current Balance"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:inputType="numberDecimal"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
@@ -258,6 +271,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:hint="Min Budget"
                     android:inputType="numberDecimal" />
 
@@ -267,6 +281,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/quicksand_variable_font"
                     android:hint="Max Budget"
                     android:inputType="numberDecimal" />
             </LinearLayout>
@@ -275,6 +290,12 @@
                 android:id="@+id/btnAddChecking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                android:textColor="@color/budgie_green"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:text="Add"
                 android:layout_marginTop="8dp" />
 
@@ -339,6 +360,12 @@
                 android:id="@+id/btnAddCredit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                android:textColor="@color/budgie_green"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:text="Add"
                 android:layout_marginTop="8dp" />
 
@@ -404,15 +431,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                android:textColor="@color/budgie_green"
+                android:fontFamily="@font/quicksand_variable_font"
                 android:layout_marginTop="8dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabBack"
+                style="?attr/floatingActionButtonLargeStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="24dp"
-                android:src="@android:drawable/ic_media_previous" />
+                android:layout_gravity="center"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/budgie_dark_green"
+                app:layout_constraintBottom_toTopOf="@+id/netFooterGroup"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.949"
+                app:layout_constraintStart_toStartOf="parent"
+                app:maxImageSize="50dp"
+                app:srcCompat="@android:drawable/ic_menu_revert"
+                app:tint="@color/budgie_green" />
 
         </LinearLayout>
     </ScrollView>
