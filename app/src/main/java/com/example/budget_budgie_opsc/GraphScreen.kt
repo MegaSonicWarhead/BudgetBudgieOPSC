@@ -385,9 +385,16 @@ class GraphScreen : AppCompatActivity() {
     }
 
     private fun updateDailySummary(todaysTotal: Double) {
+        // When we can't calculate a daily target, clear the points information
         if (minBudget <= 0.0) {
             tvDailyRecommendation.text = getString(R.string.graph_daily_target_missing)
             tvDailyPoints.text = ""
+
+            // Persist "no points" so other screens don't show stale values
+            val prefs = getSharedPreferences("BudgetBudgiePrefs", MODE_PRIVATE)
+            prefs.edit()
+                .putFloat("DAILY_POINTS", 0f)
+                .apply()
             return
         }
 
@@ -403,11 +410,19 @@ class GraphScreen : AppCompatActivity() {
         } else {
             0.0
         }
+
+        // Show full message on the graph screen
         tvDailyPoints.text = getString(
             R.string.graph_daily_points,
             formatCurrency(todaysTotal),
             points.toInt()
         )
+
+        // Persist just the numeric points so the Budgie page can display it
+        val prefs = getSharedPreferences("BudgetBudgiePrefs", MODE_PRIVATE)
+        prefs.edit()
+            .putFloat("DAILY_POINTS", points.toFloat())
+            .apply()
     }
 
     private fun setupBottomNavigation() {

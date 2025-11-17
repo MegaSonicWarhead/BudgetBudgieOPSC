@@ -2,10 +2,17 @@ package com.example.budget_budgie_opsc
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.NumberFormat
+import java.util.Locale
 
 class ProfileScreen : AppCompatActivity() {
 
@@ -28,6 +35,7 @@ class ProfileScreen : AppCompatActivity() {
         // Set up the main functionalities of this screen
         setupShopCarousel()
         setupBottomNavigation()
+        loadBudgetAndPoints()
     }
 
     private fun setupShopCarousel() {
@@ -70,6 +78,8 @@ class ProfileScreen : AppCompatActivity() {
                 }
                 R.id.nav_reports -> {
                     val intent = Intent(this, GraphScreen::class.java)
+                    intent.putExtra("USER_ID", currentUserId)
+                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
                     startActivity(intent)
                     overridePendingTransition(0, 0)
                     true
@@ -81,5 +91,32 @@ class ProfileScreen : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    private fun loadBudgetAndPoints() {
+        val monthlyBudgetTextView: TextView = findViewById(R.id.monthlyBudget_Amount)
+        val pointsTextView: TextView = findViewById(R.id.pointsAmount)
+
+        // Load minimum budget for the currently selected account
+        if (selectedAccountId.isNotEmpty()) {
+            lifecycleScope.launch {
+                val account = withContext(Dispatchers.IO) {
+                    FirebaseServiceManager.accountService.getAccountById(selectedAccountId)
+                }
+                if (account != null) {
+                    monthlyBudgetTextView.text = formatCurrency(account.minBudget)
+                }
+            }
+        }
+
+        // Load the latest daily points calculated on the Graph screen
+        val prefs = getSharedPreferences("BudgetBudgiePrefs", MODE_PRIVATE)
+        val storedPoints = prefs.getFloat("DAILY_POINTS", 0f)
+        pointsTextView.text = storedPoints.toInt().toString()
+    }
+
+    private fun formatCurrency(amount: Double): String {
+        val formatter = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
+        return formatter.format(amount)
     }
 }
