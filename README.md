@@ -13,3 +13,6 @@ Points earned from maintaining a positive budgeting streak can be spent in the i
 Expanded Account and Category Functionality
 
 Users can now create and manage multiple accounts with ease. Additionally, we’ve introduced an envelope-style system for budget categories, allowing for clearer organization and better control over spending. This system helps users allocate funds more effectively and visualize how their budget is distributed.
+
+YouTube
+https://youtu.be/zZsUIOE3Bu0
