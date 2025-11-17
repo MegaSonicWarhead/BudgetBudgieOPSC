@@ -108,7 +108,7 @@
                     android:id="@+id/imageView10"
                     android:layout_width="55dp"
                     android:layout_height="42dp"
-                    app:srcCompat="@drawable/budgetbudgie_noback" />
+                    app:srcCompat="@drawable/currency_feather" />
 
                 <TextView
                     android:id="@+id/textView3"
