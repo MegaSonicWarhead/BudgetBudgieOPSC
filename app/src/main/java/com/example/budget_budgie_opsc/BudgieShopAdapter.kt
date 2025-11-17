@@ -5,46 +5,75 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-//Data class to represent a single shop item
+// Data class to represent a single shop item
 data class ShopItem(
     val title: String,
     val points: Int,
-    val imageResId: Int // Use a drawable resource ID for the image
+    val imageResId: Int,
+    var isPurchased: Boolean = false
 )
 
-//The Adapter class
-class BudgieShopAdapter(private val items: List<ShopItem>) : RecyclerView.Adapter<BudgieShopAdapter.ShopViewHolder>() {
+// The Adapter class
+class BudgieShopAdapter(
+    private val items: List<ShopItem>,
+    private val onItemClick: (ShopItem, Int) -> Unit // Lambda: (itemClicked, its_position)
+) : RecyclerView.Adapter<BudgieShopAdapter.ShopViewHolder>() {
 
-    //ViewHolder to hold the views for a single item
+    // ViewHolder to hold the views for a single item
     class ShopViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemImage: ImageView = view.findViewById(R.id.item_image)
         val itemTitle: TextView = view.findViewById(R.id.item_title)
         val itemPoints: TextView = view.findViewById(R.id.item_points)
+        val itemCard: CardView = view as CardView // The root MaterialCardView
+        val pointsIcon: ImageView = view.findViewById(R.id.points_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopViewHolder {
-        // Inflate the layout for a single item
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.carousel_item_budgie_shop, parent, false)
         return ShopViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {
-        // Get the data for the current position
         val item = items[position]
 
-        // Bind the data to the views
         holder.itemTitle.text = item.title
-        holder.itemPoints.text = item.points.toString()
-        holder.itemImage.setImageResource(item.imageResId)
 
-        // You can add a click listener here if you want to make items buyable
+        // --- Handle purchased state ---
+        if (item.isPurchased) {
+            // If purchased: hide image/cost, change color
+            holder.itemImage.visibility = View.INVISIBLE
+            holder.itemPoints.visibility = View.INVISIBLE
+            holder.pointsIcon.visibility = View.INVISIBLE
+            holder.itemCard.setCardBackgroundColor(
+                ContextCompat.getColor(holder.itemView.context, R.color.green)
+            )
+        } else {
+            // If not purchased: show everything as normal
+            holder.itemImage.visibility = View.VISIBLE
+            holder.itemPoints.visibility = View.VISIBLE
+            holder.pointsIcon.visibility = View.VISIBLE
+            holder.itemImage.setImageResource(item.imageResId)
+            holder.itemPoints.text = item.points.toString()
+            holder.itemCard.setCardBackgroundColor(
+                ContextCompat.getColor(holder.itemView.context, android.R.color.white)
+            )
+        }
+
+        // Set the click listener to call the lambda function from the Activity
         holder.itemView.setOnClickListener {
-            // Handle item click, e.g., show a confirmation dialog
+            onItemClick(item, position)
         }
     }
 
     override fun getItemCount() = items.size
+
+    // New method to update a single item in the list. This belongs to the Adapter class, not onBindViewHolder.
+    fun updateItem(position: Int) {
+        notifyItemChanged(position)
+    }
 }
