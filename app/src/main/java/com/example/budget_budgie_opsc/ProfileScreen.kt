@@ -37,9 +37,6 @@ class ProfileScreen : AppCompatActivity() {
         //setContentView(R.layout.activity_budgiepage)
 
         Rive.init(this)
-//        val ivan = findViewById<RiveAnimationView>(R.id.ivan)
-//        ivan.setRiveResource(AppData.currentOutfit)
-
         currentUserId = intent.getStringExtra("USER_ID") ?: ""
         selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
 
