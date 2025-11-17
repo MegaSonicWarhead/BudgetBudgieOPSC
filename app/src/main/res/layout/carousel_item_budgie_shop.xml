@@ -55,9 +55,11 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/points_icon"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
+                android:contentDescription="@string/points_icon"
                 app:srcCompat="@drawable/ic_points_icon" /> <!-- You need a points icon -->
 
         </LinearLayout>

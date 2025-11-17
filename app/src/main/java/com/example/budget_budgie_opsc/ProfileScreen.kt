@@ -3,6 +3,7 @@ package com.example.budget_budgie_opsc
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,20 +20,17 @@ class ProfileScreen : AppCompatActivity() {
     private lateinit var currentUserId: String
     private lateinit var selectedAccountId: String
 
+    private lateinit var shopItems: MutableList<ShopItem>
+    private lateinit var shopAdapter: BudgieShopAdapter
+    private var userPoints: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Use the correct layout file that contains the RecyclerView
         setContentView(R.layout.activity_budgiepage)
 
-        // It's good practice to retrieve any passed-in data at the start
         currentUserId = intent.getStringExtra("USER_ID") ?: ""
         selectedAccountId = intent.getStringExtra("ACCOUNT_ID") ?: ""
 
-        if (currentUserId.isEmpty()) {
-
-        }
-
-        // Set up the main functionalities of this screen
         setupShopCarousel()
         setupBottomNavigation()
         loadBudgetAndPoints()
@@ -41,55 +39,56 @@ class ProfileScreen : AppCompatActivity() {
     private fun setupShopCarousel() {
         val recyclerView: RecyclerView = findViewById(R.id.budgie_shop_carousel)
 
-        val shopItems = listOf(
+        shopItems = mutableListOf(
             ShopItem("Ball & Chain", 100, R.drawable.ic_big_ball),
             ShopItem("Glasses", 75, R.drawable.ic_glasses),
             ShopItem("Winky Glasses", 120, R.drawable.ic_glasses2),
             ShopItem("Knife Fight Memorabilia", 80, R.drawable.ic_mother_russia),
             ShopItem("Cool Glasses", 50, R.drawable.ic_lightningglasses)
+            // TODO: local DB
         )
 
-        val adapter = BudgieShopAdapter(shopItems)
+        // --- Pass the handlePurchase function to the adapter ---
+        shopAdapter = BudgieShopAdapter(shopItems) { item, position ->
+            handlePurchase(item, position)
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = shopAdapter
     }
 
-    private fun setupBottomNavigation() {
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_nav)
-        // Set the "Profile" item as selected
-        bottomNavigationView.selectedItemId = R.id.nav_profile
+    private fun handlePurchase(item: ShopItem, position: Int) {
+        //Check if the item is already owned
+        if (item.isPurchased) {
+            Toast.makeText(this, "You already own this item!", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_categories -> {
-                    val intent = Intent(this, activity_category::class.java)
-                    intent.putExtra("USER_ID", currentUserId)
-                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
-                    startActivity(intent)
-                    overridePendingTransition(0, 0)
-                    true
-                }
-                R.id.nav_expenses -> {
-                    val intent = Intent(this, ExpensesScreen::class.java)
-                    startActivity(intent)
-                    overridePendingTransition(0, 0)
-                    true
-                }
-                R.id.nav_reports -> {
-                    val intent = Intent(this, GraphScreen::class.java)
-                    intent.putExtra("USER_ID", currentUserId)
-                    intent.putExtra("ACCOUNT_ID", selectedAccountId)
-                    startActivity(intent)
-                    overridePendingTransition(0, 0)
-                    true
-                }
-                R.id.nav_profile -> {
-                    // Already on this screen, do nothing
-                    true
-                }
-                else -> false
-            }
+        //Check if the user has enough points
+        if (userPoints >= item.points) {
+            //Purchase is successful
+            //Deduct points
+            userPoints -= item.points
+
+            //Update the item's status
+            item.isPurchased = true
+            // TODO: local DB
+
+            //Update the UI
+            val pointsTextView: TextView = findViewById(R.id.pointsAmount)
+            pointsTextView.text = userPoints.toString() // Update points display
+            shopAdapter.updateItem(position) // Tell adapter to refresh this specific item
+
+            //Update the stored points in SharedPreferences
+            val prefs = getSharedPreferences("BudgetBudgiePrefs", MODE_PRIVATE).edit()
+            prefs.putFloat("DAILY_POINTS", userPoints.toFloat())
+            prefs.apply()
+
+            Toast.makeText(this, "You purchased ${item.title}!", Toast.LENGTH_SHORT).show()
+
+        } else {
+            //Not enough points
+            Toast.makeText(this, "Not enough points to buy ${item.title}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -97,26 +96,48 @@ class ProfileScreen : AppCompatActivity() {
         val monthlyBudgetTextView: TextView = findViewById(R.id.monthlyBudget_Amount)
         val pointsTextView: TextView = findViewById(R.id.pointsAmount)
 
-        // Load minimum budget for the currently selected account
         if (selectedAccountId.isNotEmpty()) {
             lifecycleScope.launch {
                 val account = withContext(Dispatchers.IO) {
                     FirebaseServiceManager.accountService.getAccountById(selectedAccountId)
                 }
-                if (account != null) {
-                    monthlyBudgetTextView.text = formatCurrency(account.minBudget)
+                account?.let {
+                    monthlyBudgetTextView.text = formatCurrency(it.minBudget)
                 }
             }
         }
 
-        // Load the latest daily points calculated on the Graph screen
         val prefs = getSharedPreferences("BudgetBudgiePrefs", MODE_PRIVATE)
-        val storedPoints = prefs.getFloat("DAILY_POINTS", 0f)
-        pointsTextView.text = storedPoints.toInt().toString()
+        userPoints = prefs.getFloat("DAILY_POINTS", 0f).toInt()
+        pointsTextView.text = userPoints.toString()
     }
 
     private fun formatCurrency(amount: Double): String {
-        val formatter = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
-        return formatter.format(amount)
+        return NumberFormat.getCurrencyInstance(Locale("en", "ZA")).format(amount)
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_nav)
+        bottomNavigationView.selectedItemId = R.id.nav_profile
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_categories, R.id.nav_expenses, R.id.nav_reports -> {
+                    val targetClass = when (item.itemId) {
+                        R.id.nav_categories -> activity_category::class.java
+                        R.id.nav_expenses -> ExpensesScreen::class.java
+                        else -> GraphScreen::class.java
+                    }
+                    val intent = Intent(this, targetClass).apply {
+                        putExtra("USER_ID", currentUserId)
+                        putExtra("ACCOUNT_ID", selectedAccountId)
+                    }
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                    true
+                }
+                R.id.nav_profile -> true
+                else -> false
+            }
+        }
     }
 }
